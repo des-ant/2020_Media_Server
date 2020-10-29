@@ -154,7 +154,8 @@ def check_login(username, password):
         #############################################################################
 
         sql = """
-        
+        SELECT * FROM unidb.student
+                WHERE studid=%s AND password=%s
         
         """
         print(username)
