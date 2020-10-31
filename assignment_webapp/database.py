@@ -82,7 +82,7 @@ def print_sql_string(inputstring, params=None):
     if params is not None:
         if params != []:
            inputstring = inputstring.replace("%s","'%s'")
-    
+
     print(inputstring % params)
 
 #####################################################
@@ -99,14 +99,14 @@ def print_sql_string(inputstring, params=None):
 
 def dictfetchall(cursor,sqltext,params=None):
     """ Returns query results as list of dictionaries."""
-    
+
     result = []
     if (params is None):
         print(sqltext)
     else:
         print("we HAVE PARAMS!")
         print_sql_string(sqltext,params)
-    
+
     cursor.execute(sqltext,params)
     cols = [a[0].decode("utf-8") for a in cursor.description]
     print(cols)
@@ -233,12 +233,16 @@ def user_playlists(username):
         # Fill in the SQL below and make sure you get all the playlists for this user #
         ###############################################################################
         sql = """
-        
+        SELECT *
+        FROM mediaserver.UserAccount;
+        WHERE username='%s' AND password='%s';
         """
 
+        password = input()
+        cur.execute(sql, (username, password))
+        r = cur.dictfetchall()
 
         print("username is: "+username)
-        r = dictfetchall(cur,sql,(username,))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
@@ -275,10 +279,13 @@ def user_podcast_subscriptions(username):
         #################################################################################
 
         sql = """
+        SELECT podcast_title
+        FROM useraccount NATURAL JOIN subscribed_podcast NATURAL JOIN podcast
+        WHERE username=%s;
         """
 
 
-        r = dictfetchall(cur,sql,(username,))
+        r = dictfetchall(cur,sql,(username))
         print("return val is:")
         cur.close()                     # Close the cursor
         conn.close()                    # Close the connection to the db
@@ -314,10 +321,13 @@ def user_in_progress_items(username):
         ###################################################################################
 
         sql = """
+        SELECT progress
+        FROM useraccount NATURAL JOIN usermediaconsumption
+        WHERE username=%s AND progress<100;
 
         """
 
-        r = dictfetchall(cur,sql,(username,))
+        r = dictfetchall(cur,sql,(username))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
@@ -513,6 +523,9 @@ def get_alltvshows():
         # Fill in the SQL below with a query to get all tv shows and episode counts #
         #############################################################################
         sql = """
+        SELECT tvshow_title,count(tvshow_episode_title) as count_of_episode
+        FROM tvshow NATURAL JOIN tvepisode
+        GROUP BY (tvshow_title);   
         """
 
         r = dictfetchall(cur,sql)
@@ -624,9 +637,12 @@ def get_song(song_id):
         # and the artists that performed it                                         #
         #############################################################################
         sql = """
+        SELECT song_id,song_title,length,artist_name
+        FROM artist NATURAL JOIN song NATURAL JOIN song_artists
+        WHERE song_id=%s;
         """
 
-        r = dictfetchall(cur,sql,(song_id,))
+        r = dictfetchall(cur,sql,(song_id))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
@@ -663,9 +679,12 @@ def get_song_metadata(song_id):
         #############################################################################
 
         sql = """
+        SELECT md_id,md_type_id,md_value
+        FROM song NATURAL JOIN album_songs NATURAL JOIN album NATURAL JOIN albummetadata NATURAL JOIN metadata
+        WHERE song_id =%s;
         """
 
-        r = dictfetchall(cur,sql,(song_id,))
+        r = dictfetchall(cur,sql,(song_id))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
@@ -740,7 +759,7 @@ def get_all_podcasteps_for_podcast(podcast_id):
         # Fill in the SQL below with a query to get all information about all       #
         # podcast episodes in a podcast                                             #
         #############################################################################
-        
+
         sql = """
         """
 
