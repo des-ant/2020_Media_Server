@@ -157,7 +157,7 @@ def check_login(username, password):
         SELECT * FROM unidb.student
                 WHERE studid=%s AND password=%s
         
-        """
+        """g
         print(username)
         print(password)
 
@@ -234,12 +234,14 @@ def user_playlists(username):
         # Fill in the SQL below and make sure you get all the playlists for this user #
         ###############################################################################
         sql = """
-        
+        select *
+        from mediaserver.useraccount
+        where username = %s
         """
 
 
         print("username is: "+username)
-        r = dictfetchall(cur,sql,(username,))
+        r = dictfetchall(cur,sql,(username,password))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
@@ -276,6 +278,7 @@ def user_podcast_subscriptions(username):
         #################################################################################
 
         sql = """
+
         """
 
 
@@ -315,7 +318,8 @@ def user_in_progress_items(username):
         ###################################################################################
 
         sql = """
-
+        select podcast_title
+        from useraccount.
         """
 
         r = dictfetchall(cur,sql,(username,))
