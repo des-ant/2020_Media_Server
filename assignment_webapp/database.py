@@ -738,6 +738,35 @@ def get_podcast(podcast_id):
     conn.close()                    # Close the connection to the db
     return None
 
+def get_podcast_metadata(podcast_id):
+    conn = database_connect()
+    if(conn is None):
+        return None
+    cur = conn.cursor()
+    try:
+        sql = """
+        select mt.*
+        from mediaserver.metadata mt natural join mediaserver.podcastmetadata pcmt
+        natural join mediaserver.podcast pc
+        where pc.podcast_id = %s;
+
+               """
+
+        r = dictfetchall(cur,sql,(podcast_id))
+        print("return val is:")
+        print(r)
+        cur.close()                     # Close the cursor
+        conn.close()                    # Close the connection to the db
+        return r
+    except:
+        # If there were any errors, return a NULL row printing an error to the debug
+        print("Unexpected error getting Podcast meta with ID: "+podcast_id, sys.exc_info()[0])
+        raise
+    cur.close()                     # Close the cursor
+    conn.close()                    # Close the connection to the db
+    return None
+
+
 #####################################################
 #   Query (7 f)
 #   Get all podcast eps for one podcast
