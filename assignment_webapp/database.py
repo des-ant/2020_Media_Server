@@ -158,6 +158,9 @@ def check_login(username, password):
         FROM mediaserver.useraccount
         WHERE username=%s AND password=%s;
         """
+        print(username)
+        print(password)
+
         r = dictfetchone(cur,sql,(username,password))
         print(r)
         cur.close()                     # Close the cursor
