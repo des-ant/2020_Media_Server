@@ -825,7 +825,7 @@ def add_song():
             print("We have a value: ",newdict['storage_location'])
 
         if ('artist_id' not in request.form):
-            newdict['artist_id'] = 'Empty artist value'
+            newdict['artist_id'] = '0'
         else:
             newdict['artist_id'] = request.form['artist_id']
             print("We have a value: ",newdict['artist_id'])
