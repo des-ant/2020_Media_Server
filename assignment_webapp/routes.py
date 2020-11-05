@@ -795,14 +795,39 @@ def add_song():
     # Fill in the Function below with to do all data handling for adding a song #
     #############################################################################
 
-    page['title'] = '' # Add the title
+    page['title'] = 'Song Creation' # Add the title
+
+    songs = None
+    print("request from is:")
+    newdict = {}
+    print(request.form)
 
     if request.method == 'POST':
         # Set up some variables to manage the post returns
+        if ('song_title' not in request.form):
+            newdict['song_title'] = 'Empty Film Value'
+        else:
+            newdict['song_title'] = request.form['song_title']
+            print("We have a value: ", newdict['song_title'])
+
+        if ('length' not in request.form):
+            newdict['length'] = '0'
+        else:
+            newdict['length'] = request.form['length']
+            print("We have a value: ", newdict['length'])
+
+        if ('song_genre' not in request.form):
+            newdict['song_genre'] = 'Empty Song genre'
+        else:
+            newdict['song_genre'] = request.form['song_genre']
+            print("We have a value: ", newdict['song_genre'])
 
         # Once retrieved, do some data integrity checks on the data
+        print('newdict is :')
+        print(newdict)
 
         # Once verified, send the appropriate data to the database for insertion
+        songs = database.add_song_to_db(newdict['song_title'],newdict['length'],newdict['song_genre'])
 
         # NOTE :: YOU WILL NEED TO MODIFY THIS TO PASS THE APPROPRIATE VARIABLES
         return render_template('singleitems/song.html',

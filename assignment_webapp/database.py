@@ -921,9 +921,17 @@ def get_album_genres(album_id):
         # genres in an album (based on all the genres of the songs in that album)   #
         #############################################################################
         sql = """
+        SELECT distinct md_value
+        FROM mediaserver.album_songs JOIN song using(song_id) 
+        JOIN mediaserver.audiomedia ON (song.song_id = audiomedia.media_id) 
+        JOIN mediaserver.mediaitem using(media_id)
+        JOIN mediaserver.mediaitemmetadata using(media_id)
+        JOIN mediaserver.metadata using(md_id)
+        WHERE album_id = %s ;
+        
         """
 
-        r = dictfetchall(cur,sql,(album_id,))
+        r = dictfetchall(cur,sql,(album_id))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
@@ -1154,6 +1162,12 @@ def find_matchingmovies(searchterm):
         # that match a given search term                                            #
         #############################################################################
         sql = """
+        select movie_title,release_year, storage_location,md_value
+        from mediaserver.movie join mediaserver.videomedia on (movie.movie_id = videomedia.media_id)
+        natural join mediaserver.mediaitem
+        natural join mediaserver.mediaitemmetadata
+        natural join mediaserver
+        where movie_title = 'The Godfather';
         """
 
         r = dictfetchall(cur,sql,(searchterm,))
@@ -1211,7 +1225,7 @@ def add_movie_to_db(title,release_year,description,storage_location,genre):
 #   Query (9)
 #   Add a new Song
 #####################################################
-def add_song_to_db(song_params):
+def add_song_to_db(title,length,genre):
     """
     Get all the matching Movies in your media server
     """
@@ -1223,6 +1237,32 @@ def add_song_to_db(song_params):
     # Fill in the Function  with a query and management for how to add a new    #
     # song to your media server. Make sure you manage all constraints           #
     #############################################################################
+    conn = database_connect()
+    if(conn is None):
+        return None
+    cur = conn.cursor()
+    try:
+        # Try executing the SQL and get from the database
+        sql = """
+        SELECT 
+            mediaserver.addSong(
+                %s,%s,%s);
+        """
+
+        cur.execute(sql,(title,length, genre))
+        conn.commit()                   # Commit the transaction
+        r = cur.fetchone()
+        print("return val is:")
+        print(r)
+        cur.close()                     # Close the cursor
+        conn.close()                    # Close the connection to the db
+        return r
+    except:
+        # If there were any errors, return a NULL row printing an error to the debug
+        print("Unexpected error adding a movie:", sys.exc_info()[0])
+        raise
+    cur.close()                     # Close the cursor
+    conn.close()                    # Close the connection to the db
     return None
 
 
