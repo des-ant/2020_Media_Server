@@ -323,7 +323,7 @@ def user_in_progress_items(username):
 
         sql = """
         SELECT progress
-        FROM useraccount NATURAL JOIN usermediaconsumption
+        FROM mediaserver.useraccount NATURAL JOIN mediaserver.usermediaconsumption
         WHERE username=%s AND progress<100;
 
         """
@@ -811,9 +811,13 @@ def get_podcastep(podcastep_id):
         # podcast episodes and it's associated metadata                             #
         #############################################################################
         sql = """
+        select pcep.*, pcmd.*
+        from mediaserver.podcastepisode pcep natural join mediaserver.podcast pc
+        natural join mediaserver.podcastmetadata pcmd
+        where pcep.podcast_id = %s
         """
 
-        r = dictfetchall(cur,sql,(podcastep_id,))
+        r = dictfetchall(cur,sql,(podcastep_id))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
@@ -851,9 +855,12 @@ def get_album(album_id):
         # including all relevant metadata                                           #
         #############################################################################
         sql = """
+        select a.*
+        from mediaserver.album a natural join mediaserver.albummetadata amt
+        where a.album_id = %s
         """
 
-        r = dictfetchall(cur,sql,(album_id,))
+        r = dictfetchall(cur,sql,(album_id))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
@@ -891,9 +898,13 @@ def get_album_songs(album_id):
         # songs in an album, including their artists                                #
         #############################################################################
         sql = """
+        select a.*, art.artist_name
+        from mediaserver.album a natural join mediaserver.album_songs asg natural join mediaserver.song s
+        natural join mediaserver.song_artists sa  join mediaserver.Artist art on(sa.performing_artist_id = art.artist_id)
+        where a.album_id = %s;
         """
 
-        r = dictfetchall(cur,sql,(album_id,))
+        r = dictfetchall(cur,sql,(album_id))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
