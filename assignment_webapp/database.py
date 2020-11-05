@@ -1235,7 +1235,7 @@ def find_matchingmovies(searchterm):
         natural join mediaserver.mediaitem
         natural join mediaserver.mediaitemmetadata
         natural join mediaserver
-        where movie_title = 'The Godfather';
+        where movie_title =%s;
         """
 
         r = dictfetchall(cur,sql,(searchterm,))
