@@ -697,7 +697,7 @@ def search_movies():
 
     if request.method == 'POST':
         # Set up some variables to manage the post returns
-        movies = database.find_matchingmovies(reques.from['searchterm'])
+        movies = database.find_matchingmovies(request.form['searchterm'])
 
     if movies == None or movies == []:
         movies = []
