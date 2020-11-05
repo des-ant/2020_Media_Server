@@ -763,6 +763,10 @@ def get_all_podcasteps_for_podcast(podcast_id):
         #############################################################################
 
         sql = """
+        SELECT media_id, podcast_episode_title, podcast_episode_URI,
+                podcast_episode_published_date, podcast_episode_length
+                FROM mediaserver.PodcastEpisode
+                WHERE podcast_id = %s
         """
 
         r = dictfetchall(cur,sql,(podcast_id,))
