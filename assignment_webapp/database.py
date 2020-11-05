@@ -952,6 +952,8 @@ def get_album_genres(album_id):
         
         """
 
+
+
         r = dictfetchall(cur,sql,(album_id))
         print("return val is:")
         print(r)
