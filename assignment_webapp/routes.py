@@ -450,7 +450,13 @@ def single_podcastep(media_id):
     # Fill in the Function below with to do all data handling for a podcast ep  #
     #############################################################################
 
-    page['title'] = '' # Add the title
+    page['title'] = 'List Podcast Episodes'
+    podcastep = None
+    podcastep = database.get_podcastep(media_id)
+    if podcastep == None:
+        podcastep = []
+
+    print(podcastep)
 
     # Set up some variables to manage the returns from the database fucntions
     
@@ -460,7 +466,8 @@ def single_podcastep(media_id):
     return render_template('singleitems/podcastep.html',
                            session=session,
                            page=page,
-                           user=user_details)
+                           user=user_details,
+                           podcastep=podcastep)
 
 
 #####################################################
