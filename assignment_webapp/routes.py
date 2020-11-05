@@ -429,11 +429,11 @@ def single_podcast(podcast_id):
     podcastmetadat = database.get_podcast_metadata(podcast_id)
     
     # Once retrieved, do some data integrity checks on the data
-
     if podcast == None:
-       podcast = []
+        podcast = []
     if podcastmetadat == None:
-       podcastmetadat = []
+        podcastmetadat = []
+
 
     # NOTE :: YOU WILL NEED TO MODIFY THIS TO PASS THE APPROPRIATE VARIABLES
     return render_template('singleitems/podcast.html',
