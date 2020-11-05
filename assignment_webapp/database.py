@@ -154,8 +154,9 @@ def check_login(username, password):
         #############################################################################
 
         sql = """
-        
-        
+        SELECT *
+        FROM mediaserver.useraccount
+        WHERE username=%s AND password=%s;
         """
         print(username)
         print(password)
@@ -234,7 +235,7 @@ def user_playlists(username):
         ###############################################################################
         sql = """
         SELECT *
-        FROM mediaserver.UserAccount;
+        FROM mediaserver.useraccount;
         WHERE username='%s' AND password='%s';
         """
 
@@ -523,9 +524,10 @@ def get_alltvshows():
         # Fill in the SQL below with a query to get all tv shows and episode counts #
         #############################################################################
         sql = """
-        SELECT tvshow_title,count(tvshow_episode_title) as count_of_episode
-        FROM tvshow NATURAL JOIN tvepisode
-        GROUP BY (tvshow_title);   
+          SELECT tvshow_id, tvshow_title, COUNT(tvshow_episode_title)
+            FROM mediaserver.tvshow
+                 NATURAL JOIN mediaserver.tvepisode
+        GROUP BY tvshow_id;
         """
 
         r = dictfetchall(cur,sql)
@@ -961,6 +963,12 @@ def get_tvshow(tvshow_id):
         # including all relevant metadata       #
         #############################################################################
         sql = """
+        SELECT tvshow_title, md_type_name, md_value
+          FROM mediaserver.tvshow
+               NATURAL JOIN mediaserver.tvshowmetadata
+               NATURAL JOIN mediaserver.metadata
+               NATURAL JOIN mediaserver.metadatatype
+         WHERE tvshow_id = %s;
         """
 
         r = dictfetchall(cur,sql,(tvshow_id,))
@@ -1001,6 +1009,10 @@ def get_all_tvshoweps_for_tvshow(tvshow_id):
         # tv episodes in a tv show                                                  #
         #############################################################################
         sql = """
+          SELECT media_id, tvshow_episode_title, season, episode, air_date
+            FROM mediaserver.tvepisode
+           WHERE tvshow_id = %s
+        ORDER BY season, episode;
         """
 
         r = dictfetchall(cur,sql,(tvshow_id,))
@@ -1254,6 +1266,39 @@ def get_last_movie():
     except:
         # If there were any errors, return a NULL row printing an error to the debug
         print("Unexpected error adding a movie:", sys.exc_info()[0])
+        raise
+    cur.close()                     # Close the cursor
+    conn.close()                    # Close the connection to the db
+    return None
+
+
+
+#####################################################
+#   Get last Song
+#####################################################
+def get_last_song():
+    """
+    Get all the latest entered song in your media server
+    """
+
+    conn = database_connect()
+    if(conn is None):
+        return None
+    cur = conn.cursor()
+    try:
+        # Try executing the SQL and get from the database
+        sql = """
+        select max(song_id) as song_id from mediaserver.movie"""
+
+        r = dictfetchone(cur,sql)
+        print("return val is:")
+        print(r)
+        cur.close()                     # Close the cursor
+        conn.close()                    # Close the connection to the db
+        return r
+    except:
+        # If there were any errors, return a NULL row printing an error to the debug
+        print("Unexpected error adding a song:", sys.exc_info()[0])
         raise
     cur.close()                     # Close the cursor
     conn.close()                    # Close the connection to the db
