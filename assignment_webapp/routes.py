@@ -420,17 +420,29 @@ def single_podcast(podcast_id):
     # Fill in the Function below with to do all data handling for a podcast     #
     #############################################################################
 
-    page['title'] = '' # Add the title
+    page['title'] = 'Podcast'
 
     # Set up some variables to manage the returns from the database fucntions
+    podcast = None
+    podcast = database.get_podcast(podcast_id)
+    podcastmetadat = None
+    podcastmetadat = database.get_podcast_metadata(podcast_id)
     
     # Once retrieved, do some data integrity checks on the data
+
+    if podcast == None:
+       podcast = []
+    if podcastmetadat == None:
+       podcastmetadat = []
 
     # NOTE :: YOU WILL NEED TO MODIFY THIS TO PASS THE APPROPRIATE VARIABLES
     return render_template('singleitems/podcast.html',
                            session=session,
                            page=page,
-                           user=user_details)
+                           user=user_details,
+                           podcast=podcast,
+                           podcastmetadat=podcastmetadat
+                           )
 
 #####################################################
 #   Query 7
