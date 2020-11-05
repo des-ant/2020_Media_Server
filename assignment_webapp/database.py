@@ -723,6 +723,10 @@ def get_podcast(podcast_id):
         # including all metadata associated with it                                 #
         #############################################################################
         sql = """
+        SELECT podcast_id, podcast_title, podcast_uri, podcast_last_updated, md_type_name, md_value
+                FROM mediaserver.Podcast LEFT OUTER JOIN mediaserver.PodcastMetaData USING (podcast_id)
+                NATURAL JOIN mediaserver.MetaData NATURAL JOIN mediaserver.MetaDataType
+                WHERE podcast_id = %s;
         """
 
         r = dictfetchall(cur,sql,(podcast_id,))
