@@ -154,7 +154,7 @@ def check_login(username, password):
         #############################################################################
 
         sql = """
-        SELECT username, password
+        SELECT *
         FROM mediaserver.useraccount
         WHERE username =%s AND password=%s
 
