@@ -234,16 +234,17 @@ def user_playlists(username):
         # Fill in the SQL below and make sure you get all the playlists for this user #
         ###############################################################################
         sql = """
-        SELECT *
-        FROM mediaserver.useraccount;
-        WHERE username='%s' AND password='%s';
+          SELECT collection_id, collection_name, COUNT(media_id)
+            FROM mediaserver.useraccount
+                 NATURAL JOIN mediaserver.mediacollection
+                 NATURAL JOIN mediaserver.mediacollectioncontents
+           WHERE username=%s
+		GROUP BY collection_id;
         """
 
-        password = input()
-        cur.execute(sql, (username, password))
-        r = cur.dictfetchall()
 
         print("username is: "+username)
+        r = dictfetchall(cur,sql,(username,))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
@@ -280,13 +281,15 @@ def user_podcast_subscriptions(username):
         #################################################################################
 
         sql = """
-        SELECT podcast_title
-        FROM useraccount NATURAL JOIN subscribed_podcast NATURAL JOIN podcast
-        WHERE username=%s;
+        SELECT podcast_id, podcast_title, podcast_uri, podcast_last_updated
+          FROM mediaserver.useraccount
+               NATURAL JOIN mediaserver.subscribed_podcasts
+               NATURAL JOIN mediaserver.podcast
+         WHERE username=%s;
         """
 
 
-        r = dictfetchall(cur,sql,(username))
+        r = dictfetchall(cur,sql,(username,))
         print("return val is:")
         cur.close()                     # Close the cursor
         conn.close()                    # Close the connection to the db
@@ -322,13 +325,14 @@ def user_in_progress_items(username):
         ###################################################################################
 
         sql = """
-        SELECT progress
-        FROM useraccount NATURAL JOIN usermediaconsumption
-        WHERE username=%s AND progress<100;
-
+        SELECT media_id, play_count, progress, lastviewed, storage_location
+          FROM mediaserver.useraccount
+	           NATURAL JOIN mediaserver.usermediaconsumption
+	           NATURAL JOIN mediaserver.mediaitem
+	     WHERE username=%s AND progress<100;
         """
 
-        r = dictfetchall(cur,sql,(username))
+        r = dictfetchall(cur,sql,(username,))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
