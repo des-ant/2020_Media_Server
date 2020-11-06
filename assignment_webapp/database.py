@@ -196,7 +196,7 @@ def is_superuser(username):
                  FROM mediaserver.useraccount
                  WHERE username=%s AND isSuper"""
         print("username is: "+username)
-        cur.execute(sql, (username))
+        cur.execute(sql, (username,))
         r = cur.fetchone()              # Fetch the first row
         print(r)
         cur.close()                     # Close the cursor
@@ -242,11 +242,9 @@ def user_playlists(username):
 		GROUP BY collection_id;
         """
 
-        password = input()
-        cur.execute(sql, (username))
-        r = cur.dictfetchall()
 
         print("username is: "+username)
+        r = dictfetchall(cur,sql,(username,))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
@@ -291,7 +289,7 @@ def user_podcast_subscriptions(username):
         """
 
 
-        r = dictfetchall(cur,sql,(username))
+        r = dictfetchall(cur,sql,(username,))
         print("return val is:")
         cur.close()                     # Close the cursor
         conn.close()                    # Close the connection to the db
@@ -334,7 +332,7 @@ def user_in_progress_items(username):
 	     WHERE username=%s AND progress<100;
         """
 
-        r = dictfetchall(cur,sql,(username))
+        r = dictfetchall(cur,sql,(username,))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
