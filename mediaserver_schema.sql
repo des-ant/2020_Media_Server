@@ -308,27 +308,44 @@ create or replace function mediaserver.addSong(
     artistid int)
 RETURNS int AS
 $BODY$
-    with ins1 as (
-        insert into mediaserver.mediaItem(storage_location)
-        values(location)
+    WITH ins1 AS (
+        INSERT INTO mediaserver.mediaItem(storage_location)
+        VALUES(location)
         returning media_id
     )
-    , ins2 as (
-        insert into mediaserver.metadata (md_type_id,md_value)
-        select md_type_id, moviedescription
-        from mediaserver.MetaDataType where md_type_name = 'description'
-        returning md_id
+    , ins2 AS (
+        INSERT INTO mediaserver.metadata (md_type_id,md_value)
+        SELECT md_type_id, songdescription
+        FROM mediaserver.MetaDataType WHERE md_type_name = 'description'
+        RETURNING md_id
     )
-    , ins3 as (
-        insert into mediaserver.AudioMedia
-        select media_id from ins1
+    , ins3 AS (
+        INSERT INTO mediaserver.AudioMedia
+        SELECT media_id FROM ins1
     )
-    , ins4 as (
-        insert into mediaserver.Song
-        select media_id, title, length from ins1
+    , ins4 AS (
+        INSERT INTO mediaserver.Song
+        SELECT media_id, title, songlength from ins1
     )
-    , ins5 as (
-        insert into 
+    , ins5 AS (
+        INSERT INTO mediaserver.metadata (md_type_id,md_value)
+        SELECT md_type_id, songgenre
+        FROM mediaserver.MetaDataType WHERE md_type_name = 'song genre'
+        RETURNING md_id AS genre_md_id
+    )
+    , ins6 AS (
+        INSERT INTO mediaserver.Song_Artists (md_id,artist_id)
+        SELECT media_id, artist_id
+        FROM ins1, mediaserver.artist WHERE artist_id = artistid
+    )
+    , ins7 AS (
+        INSERT INTO mediaserver.MediaItemMetaData
+        SELECT media_id, genre_md_id FROM ins1, ins5
+        )
+        INSERT INTO mediaserver.MediaItemMetaData
+        SELECT media_id, md_id FROM ins1, ins2;
+
+        SELECT max(song_id) as song_id FROM mediaserver.song;
     )
 $BODY$
 LANGUAGE sql;

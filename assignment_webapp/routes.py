@@ -833,7 +833,7 @@ def add_song():
 
         # Once retrieved, do some data integrity checks on the data
         if ('song_title' not in request.form):
-            newdict['song_title'] = 'Empty Song Value'
+            newdict['song_title'] = 'Empty Song'
         else:
             newdict['song_title'] = request.form['song_title']
             print('We have a value: ',newdict['song_title'])
@@ -845,25 +845,25 @@ def add_song():
             print("We have a value: ",newdict['length'])
 
         if ('storage_location' not in request.form):
-            newdict['storage_location'] = 'Empty storage location'
+            newdict['storage_location'] = 'no location'
         else:
             newdict['storage_location'] = request.form['storage_location']
             print("We have a value: ",newdict['storage_location'])
 
         if ('artist_id' not in request.form):
-            newdict['artist_id'] = '0'
+            newdict['artist_id'] = '19'
         else:
             newdict['artist_id'] = request.form['artist_id']
             print("We have a value: ",newdict['artist_id'])
 
         if ('description' not in request.form):
-            newdict['description'] = 'Empty description field'
+            newdict['description'] = 'no description'
         else:
             newdict['description'] = request.form['description']
             print("We have a value: ",newdict['description'])
 
         if ('song_genre' not in request.form):
-            newdict['song_genre'] = 'Empty genre value'
+            newdict['song_genre'] = 'empty genre'
         else:
             newdict['song_genre'] = request.form['song_genre']
             print("We have a value: ",newdict['song_genre'])
