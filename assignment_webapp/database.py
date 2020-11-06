@@ -196,7 +196,7 @@ def is_superuser(username):
                  FROM mediaserver.useraccount
                  WHERE username=%s AND isSuper"""
         print("username is: "+username)
-        cur.execute(sql, (username,))
+        cur.execute(sql, (username))
         r = cur.fetchone()              # Fetch the first row
         print(r)
         cur.close()                     # Close the cursor
@@ -644,11 +644,13 @@ def get_song(song_id):
         #############################################################################
         sql = """
         SELECT song_id,song_title,length,artist_name
-        FROM artist NATURAL JOIN song NATURAL JOIN song_artists
-        WHERE song_id=%s;
+          FROM mediaserver.artist
+               NATURAL JOIN mediaserver.song
+               NATURAL JOIN mediaserver.song_artists
+         WHERE song_id=%s;
         """
 
-        r = dictfetchall(cur,sql,(song_id))
+        r = dictfetchall(cur,sql,(song_id,))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
@@ -685,12 +687,17 @@ def get_song_metadata(song_id):
         #############################################################################
 
         sql = """
-        SELECT md_id,md_type_id,md_value
-        FROM song NATURAL JOIN album_songs NATURAL JOIN album NATURAL JOIN albummetadata NATURAL JOIN metadata
-        WHERE song_id =%s;
+        SELECT md_type_name, md_value
+          FROM mediaserver.song
+               NATURAL JOIN mediaserver.album_songs
+               NATURAL JOIN mediaserver.album
+               NATURAL JOIN mediaserver.albummetadata
+               NATURAL JOIN mediaserver.metadata
+			   NATURAL JOIN mediaserver.metadatatype
+         WHERE song_id =%s;
         """
 
-        r = dictfetchall(cur,sql,(song_id))
+        r = dictfetchall(cur,sql,(song_id,))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
@@ -761,7 +768,7 @@ def get_podcast_metadata(podcast_id):
 
                """
 
-        r = dictfetchall(cur,sql,(podcast_id))
+        r = dictfetchall(cur,sql,(podcast_id,))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
@@ -850,7 +857,7 @@ def get_podcastep(podcastep_id):
         where pcep.podcast_id = %s
         """
 
-        r = dictfetchall(cur,sql,(podcastep_id))
+        r = dictfetchall(cur,sql,(podcastep_id,))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
@@ -893,7 +900,7 @@ def get_album(album_id):
         where a.album_id = %s
         """
 
-        r = dictfetchall(cur,sql,(album_id))
+        r = dictfetchall(cur,sql,(album_id,))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
@@ -937,7 +944,7 @@ def get_album_songs(album_id):
         where a.album_id = %s;
         """
 
-        r = dictfetchall(cur,sql,(album_id))
+        r = dictfetchall(cur,sql,(album_id,))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
@@ -985,9 +992,7 @@ def get_album_genres(album_id):
         
         """
 
-
-
-        r = dictfetchall(cur,sql,(album_id))
+        r = dictfetchall(cur,sql,(album_id,))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
