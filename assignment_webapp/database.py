@@ -895,9 +895,12 @@ def get_album(album_id):
         # including all relevant metadata                                           #
         #############################################################################
         sql = """
-        select a.*
-        from mediaserver.album a natural join mediaserver.albummetadata amt
-        where a.album_id = %s
+        SELECT md_type_name, md_value
+          FROM mediaserver.album
+               NATURAL JOIN mediaserver.albummetadata
+               NATURAL JOIN mediaserver.metadata
+               NATURAL JOIN mediaserver.metadatatype
+         WHERE album_id = %s;
         """
 
         r = dictfetchall(cur,sql,(album_id,))
@@ -938,13 +941,15 @@ def get_album_songs(album_id):
         # songs in an album, including their artists                                #
         #############################################################################
         sql = """
-        select a.*, art.artist_name
-        from mediaserver.album a
-        natural join mediaserver.album_songs asg
-        natural join mediaserver.song s
-        natural join mediaserver.song_artists sa
-        join mediaserver.Artist art on(sa.performing_artist_id = art.artist_id)
-        where a.album_id = %s;
+          SELECT track_num, song_id, song_title, STRING_AGG(art.artist_name, ', ') AS artists
+            FROM mediaserver.album a
+		         NATURAL JOIN mediaserver.album_songs asg
+		         NATURAL JOIN mediaserver.song s
+                 NATURAL JOIN mediaserver.song_artists sa
+		    JOIN mediaserver.Artist art ON (sa.performing_artist_id = art.artist_id)
+           WHERE a.album_id = %s
+		GROUP BY track_num, song_id, song_title
+		ORDER BY track_num;
         """
 
         r = dictfetchall(cur,sql,(album_id,))
@@ -985,8 +990,8 @@ def get_album_genres(album_id):
         # genres in an album (based on all the genres of the songs in that album)   #
         #############################################################################
         sql = """
-        SELECT distinct md_value
-        FROM mediaserver.album_songs JOIN mediaserver.song using(song_id)
+        SELECT distinct md_value AS songgenres
+        FROM mediaserver.album_songs JOIN mediaserver.song using(song_id) 
         JOIN mediaserver.audiomedia ON (song.song_id = audiomedia.media_id) 
         JOIN mediaserver.mediaitem using(media_id)
         JOIN mediaserver.mediaitemmetadata using(media_id)
@@ -1241,7 +1246,7 @@ def find_matchingmovies(searchterm):
         natural join mediaserver.mediaitem
         natural join mediaserver.mediaitemmetadata
         natural join mediaserver
-        where movie_title = %s;
+        where movie_title =%s;
         """
 
         r = dictfetchall(cur,sql,(searchterm,))
