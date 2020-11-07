@@ -325,7 +325,7 @@ def user_in_progress_items(username):
         ###################################################################################
 
         sql = """
-        SELECT media_id, play_count, progress, lastviewed, storage_location
+        SELECT media_id, play_count as playcount, progress, lastviewed, storage_location
           FROM mediaserver.useraccount
 	           NATURAL JOIN mediaserver.usermediaconsumption
 	           NATURAL JOIN mediaserver.mediaitem
@@ -895,7 +895,7 @@ def get_album(album_id):
         # including all relevant metadata                                           #
         #############################################################################
         sql = """
-        SELECT md_type_name, md_value
+        SELECT album.*,md_type_name, md_value
           FROM mediaserver.album
                NATURAL JOIN mediaserver.albummetadata
                NATURAL JOIN mediaserver.metadata
