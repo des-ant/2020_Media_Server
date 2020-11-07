@@ -939,8 +939,11 @@ def get_album_songs(album_id):
         #############################################################################
         sql = """
         select a.*, art.artist_name
-        from mediaserver.album a natural join mediaserver.album_songs asg natural join mediaserver.song s
-        natural join mediaserver.song_artists sa  join mediaserver.Artist art on(sa.performing_artist_id = art.artist_id)
+        from mediaserver.album a
+        natural join mediaserver.album_songs asg
+        natural join mediaserver.song s
+        natural join mediaserver.song_artists sa
+        join mediaserver.Artist art on(sa.performing_artist_id = art.artist_id)
         where a.album_id = %s;
         """
 
@@ -983,7 +986,7 @@ def get_album_genres(album_id):
         #############################################################################
         sql = """
         SELECT distinct md_value
-        FROM mediaserver.album_songs JOIN song using(song_id) 
+        FROM mediaserver.album_songs JOIN mediaserver.song using(song_id)
         JOIN mediaserver.audiomedia ON (song.song_id = audiomedia.media_id) 
         JOIN mediaserver.mediaitem using(media_id)
         JOIN mediaserver.mediaitemmetadata using(media_id)
@@ -1238,7 +1241,7 @@ def find_matchingmovies(searchterm):
         natural join mediaserver.mediaitem
         natural join mediaserver.mediaitemmetadata
         natural join mediaserver
-        where movie_title =%s;
+        where movie_title = %s;
         """
 
         r = dictfetchall(cur,sql,(searchterm,))
