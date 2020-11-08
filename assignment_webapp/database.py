@@ -1332,7 +1332,7 @@ def add_song_to_db(title,length,storage_location,artist_id,description,genre):
         sql = """
         SELECT
             mediaserver.addSong(
-                %s,%s,%s,%s,%s);
+                %s,%s,%s,%s,%s,%s);
         """
 
         cur.execute(sql,(storage_location,description,title,length,genre,artist_id))
