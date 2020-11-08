@@ -60,7 +60,7 @@
                         <!-- Add a for loop to iterate over the episodes -->
                         {%for instance in podcastep%}
                         <!--Adding a link for each individual page-->
-                        <tr>
+                        <tr class="clickable-tr" data-href="{{ url_for('single_podcastep', media_id=instance.media_id)}}">
 
                             <td style= "text-align: center">{{ instance.media_id }}</td>
                             <td>{{instance.podcast_episode_title}}</td>
