@@ -854,11 +854,13 @@ def get_podcastep(podcastep_id):
         # podcast episodes and it's associated metadata                             #
         #############################################################################
         sql = """
-        select pcep.*, pcmd.*
-        from mediaserver.podcastepisode pcep
-        natural join mediaserver.podcast pc
-        natural join mediaserver.podcastmetadata pcmd
-        where pcep.podcast_id = %s
+        SELECT media_id, podcast_episode_title, podcast_episode_URI,
+                podcast_episode_published_date, podcast_episode_length, md_type_name, md_value
+                FROM mediaserver.PodcastEpisode LEFT OUTER JOIN mediaserver.MediaItemMetaData USING (media_id)
+                NATURAL JOIN mediaserver.MetaData
+                NATURAL JOIN mediaserver.MetaDataType
+                WHERE media_id = %s
+
         """
 
         r = dictfetchall(cur,sql,(podcastep_id,))
