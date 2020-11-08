@@ -1310,13 +1310,19 @@ def add_movie_to_db(title,release_year,description,storage_location,genre):
 #   Query (9)
 #   Add a new Song
 #####################################################
-def add_song_to_db(title,length,genre):
+def add_song_to_db(title,length,storage_location,artist_id,description,genre):
     """
-    Get all the matching Movies in your media server
+    Add a new Song to your media server
     """
     #########
     # TODO  #
     #########
+
+    #############################################################################
+    # Fill in the Function  with a query and management for how to add a new    #
+    # song to your media server. Make sure you manage all constraints           #
+    #############################################################################
+
     conn = database_connect()
     if(conn is None):
         return None
@@ -1329,7 +1335,7 @@ def add_song_to_db(title,length,genre):
                 %s,%s,%s,%s,%s);
         """
 
-        cur.execute(sql,(storage_location,description,title,release_year,genre))
+        cur.execute(sql,(storage_location,description,title,length,genre,artist_id))
         conn.commit()                   # Commit the transaction
         r = cur.fetchone()
         print("return val is:")
@@ -1339,38 +1345,7 @@ def add_song_to_db(title,length,genre):
         return r
     except:
         # If there were any errors, return a NULL row printing an error to the debug
-        print("Unexpected error adding a movie:", sys.exc_info()[0])
-        raise
-    cur.close()                     # Close the cursor
-    conn.close()                    # Close the connection to the db
-
-    #############################################################################
-    # Fill in the Function  with a query and management for how to add a new    #
-    # song to your media server. Make sure you manage all constraints           #
-    #############################################################################
-    conn = database_connect()
-    if(conn is None):
-        return None
-    cur = conn.cursor()
-    try:
-        # Try executing the SQL and get from the database
-        sql = """
-        SELECT 
-            mediaserver.addSong(
-                %s,%s,%s);
-        """
-
-        cur.execute(sql,(title,length, genre))
-        conn.commit()                   # Commit the transaction
-        r = cur.fetchone()
-        print("return val is:")
-        print(r)
-        cur.close()                     # Close the cursor
-        conn.close()                    # Close the connection to the db
-        return r
-    except:
-        # If there were any errors, return a NULL row printing an error to the debug
-        print("Unexpected error adding a movie:", sys.exc_info()[0])
+        print("Unexpected error adding a song:", sys.exc_info()[0])
         raise
     cur.close()                     # Close the cursor
     conn.close()                    # Close the connection to the db
