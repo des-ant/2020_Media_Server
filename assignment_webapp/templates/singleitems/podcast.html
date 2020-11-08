@@ -59,7 +59,9 @@
                     <tbody>
                         <!-- Add a for loop to iterate over the episodes -->
                         {%for instance in podcastep%}
+                        <!--Adding a link for each individual page-->
                         <tr>
+
                             <td style= "text-align: center">{{ instance.media_id }}</td>
                             <td>{{instance.podcast_episode_title}}</td>
                             <td>{{instance.podcast_episode_uri}}</td>
