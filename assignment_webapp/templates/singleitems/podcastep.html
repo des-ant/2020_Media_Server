@@ -1,11 +1,61 @@
 {% include 'top.html' %}
+<style>
+body {
+background-color: lightblue;
+}
+
+h1 {
+  color: navy;
+  margin-left: 20px;
+}
+
+
+</style>
+
 <div class="content">
     <div class="container details">
         <!-- TODO Query 7
         Display All Relevant Podcast Episode Infromation including meta data
         -->
 
+        {% if podcastep %}
+        <h1 class="title"> {{podcastep[0].podcast_episode_title}} </h1>
+        <h3 style="color:black;text-align:center;"> Podcast Episode ID: {{podcastep[0].media_id}}</h3>
+        <h3 style="color:black;text-align:center;"> Podcast Episode URI: {{podcastep[0].podcast_episode_uri}}</h3>
+        <h3 style="color:black;text-align:center;">  Podcast Episode Length: {{podcastep[0].podcast_episode_length}} seconds</h3>
+        <h3 style="color:black;text-align:center;"> Podcast Episode Date Published: {{podcastep[0].podcast_episode_published_date}} </h3>
+        <hr/>
 
+
+        <h2 style="color:blue;text-align:center;"> Podcast Episode Artworks </h2>
+        {% for a in podcastep %}
+        {% if a.md_type_name == 'artwork' %}
+        <img src="{{a.md_value}}" alt="image">
+        {% endif %}
+        {% endfor %}
+        <br/>
+
+        <h3 style="color:black;text-align:center;"> Podcast Episode Description </h3>
+        {% for a in podcastep %}
+        {% if a.md_type_name == 'description' %}
+        {{a.md_value}}
+
+        {% endif %}
+        {% endfor %}
+        <br/>
+
+
+        <h3 style="color:black;text-align:center;">Podcast Episode  Genres </h3>
+        {% for a in podcastep %}
+        {% if a.md_type_name == 'podcast genre' %}
+        {{a.md_value}}
+
+        {% endif %}
+        {% endfor %}
+        <br/>
+        {% else %}
+        <h2 class="title"> NONE FOUND </h2>
+        {% endif %}
     </div>
 </div>
 {% include 'bottom.html'%}
