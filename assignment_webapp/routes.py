@@ -427,12 +427,17 @@ def single_podcast(podcast_id):
     podcast = database.get_podcast(podcast_id)
     podcastmetadat = None
     podcastmetadat = database.get_podcast_metadata(podcast_id)
+    podcastep = None
+    podcastep = database.get_all_podcasteps_for_podcast(podcast_id)
     
     # Once retrieved, do some data integrity checks on the data
     if podcast == None:
         podcast = []
     if podcastmetadat == None:
         podcastmetadat = []
+    if podcastep == None:
+        podcastep = []
+
 
 
     # NOTE :: YOU WILL NEED TO MODIFY THIS TO PASS THE APPROPRIATE VARIABLES
@@ -441,7 +446,8 @@ def single_podcast(podcast_id):
                            page=page,
                            user=user_details,
                            podcast=podcast,
-                           podcastmetadat=podcastmetadat
+                           podcastmetadat=podcastmetadat,
+                           podcastep = podcastep
                            )
 
 #####################################################

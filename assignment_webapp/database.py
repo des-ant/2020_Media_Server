@@ -761,8 +761,10 @@ def get_podcast_metadata(podcast_id):
     cur = conn.cursor()
     try:
         sql = """
-        select mt.*
-        from mediaserver.metadata mt natural join mediaserver.podcastmetadata pcmt
+        select mt.*, mtt.*
+        from mediaserver.metadatatype mtt
+        natural join mediaserver.metadata mt
+        natural join mediaserver.podcastmetadata pcmt
         natural join mediaserver.podcast pc
         where pc.podcast_id = %s;
 
@@ -811,6 +813,7 @@ def get_all_podcasteps_for_podcast(podcast_id):
                 podcast_episode_published_date, podcast_episode_length
                 FROM mediaserver.PodcastEpisode
                 WHERE podcast_id = %s
+                order by podcast_episode_published_date desc
         """
 
         r = dictfetchall(cur,sql,(podcast_id,))
@@ -852,7 +855,8 @@ def get_podcastep(podcastep_id):
         #############################################################################
         sql = """
         select pcep.*, pcmd.*
-        from mediaserver.podcastepisode pcep natural join mediaserver.podcast pc
+        from mediaserver.podcastepisode pcep
+        natural join mediaserver.podcast pc
         natural join mediaserver.podcastmetadata pcmd
         where pcep.podcast_id = %s
         """

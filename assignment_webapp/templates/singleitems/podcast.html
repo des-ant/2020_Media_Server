@@ -5,6 +5,45 @@
         Display All Relevant Podcast Infromation including meta data
         Display All Relevant Podcast Episodes for this Podcast
         -->
+        {%if podcast %}
+            <h2 class = "title">{{podcast[0].podcast_id}}</h2>
+
+            <br/>
+            Podcast {{podcast[0].podcast_id}} info:
+            <h3>Name</h3>
+            {{podcast[0].podcast_title}}
+            <h3>URL</h3>
+            {{podcast[0].podcast_uri}}
+            <h3>Last update time</h3>
+            {{podcast[0].podcast_last_updated}}
+            <h3>Descriptions</h3>
+            {% for instance in podcastmetadat %}
+                {% if instance.md_type_name == 'description'%}
+                    <div>
+                        {{instance.md_value}}
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <h3>Artworks</h3>
+            {% for instance in podcastmetadat %}
+                {% if instance.md_type_name == 'artwork'%}
+                    <img src="{{instance.md_value}}" alt="image">
+                    <br/>© Spotify Public Domain 2019.
+                {% endif %}
+            {% endfor %}
+            <h3>Genres</h3>
+            {% for instance in podcastmetadat %}
+                {% if instance.md_type_name == 'song genre' %}
+                    <div>
+                        {{instance.md_value}}
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <hr/>
+
+
                 <!-- Podcast Episodes -->
                 <h3>Episodes for this Podcast</h3>
                 <table class="styled">
@@ -19,11 +58,21 @@
                     </thead>
                     <tbody>
                         <!-- Add a for loop to iterate over the episodes -->
+                        {%for instance in podcastep%}
+                        <tr>
+                            <td style= "text-align: center">{{ instance.media_id }}</td>
+                            <td>{{instance.podcast_episode_title}}</td>
+                            <td>{{instance.podcast_episode_uri}}</td>
+                            <td>{{instance.podcast_episode_published_date}}</td>
+                            <td>{{instance.podcast_episode_length}}</td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
-        
                 </table>
-        
-            </div>
+<!--            </div>-->
+        {% else %}
+        <h2 class="title"> Invalid podcast ID</h2>
+        {% endif %}
     </div>
 </div>
 {% include 'bottom.html'%}
