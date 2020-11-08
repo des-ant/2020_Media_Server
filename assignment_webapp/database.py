@@ -1402,7 +1402,7 @@ def get_last_song():
     try:
         # Try executing the SQL and get from the database
         sql = """
-        select max(song_id) as song_id from mediaserver.movie"""
+        select max(song_id) as song_id from mediaserver.song"""
 
         r = dictfetchone(cur,sql)
         print("return val is:")
