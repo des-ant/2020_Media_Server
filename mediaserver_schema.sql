@@ -325,7 +325,7 @@ $BODY$
     )
     , ins4 AS (
         INSERT INTO mediaserver.Song
-        SELECT media_id, title, CAST(songlength AS INTEGER) from ins1
+        SELECT media_id, title, songlength from ins1
     )
     , ins5 AS (
         INSERT INTO mediaserver.metadata (md_type_id,md_value)
@@ -335,7 +335,7 @@ $BODY$
     )
     , ins6 AS (
         INSERT INTO mediaserver.Song_Artists (song_id,performing_artist_id)
-        SELECT media_id, CAST(artist_id AS INTEGER)
+        SELECT media_id, artist_id
         FROM ins1, mediaserver.artist WHERE artist_id = artistid
     )
     , ins7 AS (
