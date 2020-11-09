@@ -723,7 +723,9 @@ def search_movies():
     return render_template('searchitems/search_movies.html',
                 session=session,
                 page=page,
-                user=user_details)
+                user=user_details,
+                movies=movies)
+
 
 
 #####################################################

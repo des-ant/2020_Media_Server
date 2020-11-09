@@ -1245,12 +1245,13 @@ def find_matchingmovies(searchterm):
         # that match a given search term                                            #
         #############################################################################
         sql = """
-        select movie_title,release_year, storage_location,md_value
-        from mediaserver.movie join mediaserver.videomedia on (movie.movie_id = videomedia.media_id)
-        natural join mediaserver.mediaitem
-        natural join mediaserver.mediaitemmetadata
-        natural join mediaserver
-        where movie_title =%s;
+            select movie_id,movie_title,release_year, storage_location,count(md_value)
+            from mediaserver.movie join mediaserver.videomedia on (movie.movie_id = videomedia.media_id)
+            natural join mediaserver.mediaitem
+            natural join mediaserver.mediaitemmetadata
+            natural join mediaserver.metadata
+            where movie_title =%s
+            Group by movie_id,movie_title,release_year,storage_location;
         """
 
         r = dictfetchall(cur,sql,(searchterm,))
