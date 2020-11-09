@@ -397,7 +397,7 @@ def get_allsongs():
     try:
         # Try executing the SQL and get from the database
         sql = """select
-            s.song_id, s.song_title, string_agg(saa.artist_name,',') as artists
+            s.song_id, s.song_title, string_agg(saa.artist_name,', ') as artists
         from
             mediaserver.song s left outer join
             (mediaserver.Song_Artists sa join mediaserver.Artist a on (sa.performing_artist_id=a.artist_id)
@@ -480,7 +480,7 @@ def get_allalbums():
             from
                 mediaserver.album a,
                 (select
-                    a1.album_id, count(distinct as1.song_id) as count, array_to_string(array_agg(distinct ar1.artist_name),',') as artists
+                    a1.album_id, count(distinct as1.song_id) as count, array_to_string(array_agg(distinct ar1.artist_name),', ') as artists
                 from
                     mediaserver.album a1
 			left outer join mediaserver.album_songs as1 on (a1.album_id=as1.album_id)
@@ -643,11 +643,12 @@ def get_song(song_id):
         # and the artists that performed it                                         #
         #############################################################################
         sql = """
-        SELECT song_id,song_title,length,artist_name
-          FROM mediaserver.artist
-               NATURAL JOIN mediaserver.song
-               NATURAL JOIN mediaserver.song_artists
-         WHERE song_id=%s;
+          SELECT S.song_id, S.song_title, S.length, STRING_AGG(AR.artist_name, ', ') AS artists
+            FROM mediaserver.song S
+                 LEFT OUTER JOIN mediaserver.song_artists SA ON (S.song_id = SA.song_id)
+                 LEFT OUTER JOIN mediaserver.artist AR ON (SA.performing_artist_id = AR.artist_id)
+           WHERE S.song_id=%s
+        GROUP BY S.song_id;
         """
 
         r = dictfetchall(cur,sql,(song_id,))
@@ -687,17 +688,23 @@ def get_song_metadata(song_id):
         #############################################################################
 
         sql = """
-        SELECT md_type_name, md_value
-          FROM mediaserver.song
-               NATURAL JOIN mediaserver.album_songs
-               NATURAL JOIN mediaserver.album
-               NATURAL JOIN mediaserver.albummetadata
-               NATURAL JOIN mediaserver.metadata
-			   NATURAL JOIN mediaserver.metadatatype
-         WHERE song_id =%s;
+        SELECT MDT.md_type_name, MD.md_value
+          FROM mediaserver.song S
+		       LEFT OUTER JOIN mediaserver.mediaitemmetadata MIMD ON (S.song_id = MIMD.media_id)
+		       LEFT OUTER JOIN mediaserver.metadata MD ON (MIMD.md_id = MD.md_id)
+		       LEFT OUTER JOIN mediaserver.metadatatype MDT ON (MD.md_type_id = MDT.md_type_id)
+		 WHERE S.song_id=%s
+		UNION          
+		SELECT MDT2.md_type_name, MD2.md_value
+          FROM mediaserver.song S2
+			   LEFT OUTER JOIN mediaserver.album_songs AlS ON (S2.song_id = AlS.song_id)
+               LEFT OUTER JOIN mediaserver.albummetadata AMD ON (AlS.album_id = AMD.album_id)
+               LEFT OUTER JOIN mediaserver.metadata MD2 ON (AMD.md_id = MD2.md_id)
+			   LEFT OUTER JOIN mediaserver.metadatatype MDT2 ON (MD2.md_type_id = MDT2.md_type_id)
+		 WHERE S2.song_id=%s;
         """
 
-        r = dictfetchall(cur,sql,(song_id,))
+        r = dictfetchall(cur,sql,(song_id,)*2)
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
@@ -1044,12 +1051,12 @@ def get_tvshow(tvshow_id):
         # including all relevant metadata       #
         #############################################################################
         sql = """
-        SELECT tvshow_title, md_type_name, md_value
-          FROM mediaserver.tvshow
-               NATURAL JOIN mediaserver.tvshowmetadata
-               NATURAL JOIN mediaserver.metadata
-               NATURAL JOIN mediaserver.metadatatype
-         WHERE tvshow_id = %s;
+        SELECT TV.tvshow_title, MDT.md_type_name, MD.md_value
+          FROM mediaserver.tvshow TV
+               LEFT OUTER JOIN mediaserver.tvshowmetadata TVMD ON (TV.tvshow_id = TVMD.tvshow_id)
+               LEFT OUTER JOIN mediaserver.metadata MD ON (TVMD.md_id = MD.md_id)
+               LEFT OUTER JOIN mediaserver.metadatatype MDT ON (MD.md_type_id = MDT.md_type_id)
+         WHERE TV.tvshow_id = %s;
         """
 
         r = dictfetchall(cur,sql,(tvshow_id,))
