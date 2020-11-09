@@ -334,7 +334,7 @@ $BODY$
         RETURNING md_id AS genre_md_id
     )
     , ins6 AS (
-        INSERT INTO mediaserver.Song_Artists (md_id,artist_id)
+        INSERT INTO mediaserver.Song_Artists (song_id,performing_artist_id)
         SELECT media_id, artist_id
         FROM ins1, mediaserver.artist WHERE artist_id = artistid
     )
@@ -346,7 +346,6 @@ $BODY$
         SELECT media_id, md_id FROM ins1, ins2;
 
         SELECT max(song_id) as song_id FROM mediaserver.song;
-    )
 $BODY$
 LANGUAGE sql;
 

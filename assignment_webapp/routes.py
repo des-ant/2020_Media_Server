@@ -887,7 +887,7 @@ def add_song():
 
         # Once verified, send the appropriate data to the database for insertion
         # Forward to the database to manage insert
-        songs = database.add_song_to_db(newdict['song_title'],newdict['length'],newdict['storage_location'],newdict['artist_id'],newdict['description'],newdict['song_genre'],newdict['artwork'])
+        songs = database.add_song_to_db(newdict['song_title'],newdict['length'],newdict['storage_location'],newdict['artist_id'],newdict['description'],newdict['song_genre'])
 
 
         max_song_id = database.get_last_song()[0]['song_id']
