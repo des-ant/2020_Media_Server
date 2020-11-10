@@ -840,43 +840,44 @@ def add_song():
     if request.method == 'POST':
 
         # Once retrieved, do some data integrity checks on the data
-        if ('song_title' not in request.form):
+        # Set default values for empty string input
+        if ('song_title' not in request.form or not request.form['song_title']):
             newdict['song_title'] = 'Empty Song'
         else:
             newdict['song_title'] = request.form['song_title']
             print('We have a value: ',newdict['song_title'])
 
-        if ('length' not in request.form):
+        if ('length' not in request.form or not request.form['length']):
             newdict['length'] = '0'
         else:
             newdict['length'] = request.form['length']
             print("We have a value: ",newdict['length'])
 
-        if ('storage_location' not in request.form):
+        if ('storage_location' not in request.form or not request.form['storage_location']):
             newdict['storage_location'] = 'no location'
         else:
             newdict['storage_location'] = request.form['storage_location']
             print("We have a value: ",newdict['storage_location'])
 
-        if ('artist_id' not in request.form):
+        if ('artist_id' not in request.form or not request.form['artist_id']):
             newdict['artist_id'] = '19'
         else:
             newdict['artist_id'] = request.form['artist_id']
             print("We have a value: ",newdict['artist_id'])
 
-        if ('description' not in request.form):
+        if ('description' not in request.form or not request.form['description']):
             newdict['description'] = 'no description'
         else:
             newdict['description'] = request.form['description']
             print("We have a value: ",newdict['description'])
 
-        if ('song_genre' not in request.form):
-            newdict['song_genre'] = 'empty genre'
+        if ('song_genre' not in request.form or not request.form['song_genre']):
+            newdict['song_genre'] = 'pop'
         else:
             newdict['song_genre'] = request.form['song_genre']
             print("We have a value: ",newdict['song_genre'])
 
-        if ('artwork' not in request.form):
+        if ('artwork' not in request.form or not request.form['artwork']):
             newdict['artwork'] = 'https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png'
         else:
             newdict['artwork'] = request.form['artwork']
