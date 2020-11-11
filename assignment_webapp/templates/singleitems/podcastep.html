@@ -56,6 +56,10 @@ h1 {
         {% else %}
         <h2 class="title"> NONE FOUND </h2>
         {% endif %}
+
+        {% if session.is_superuser %}
+        <a class="pure-button" href="{{ url_for('delete_page')}}">Delete PodcastEp</a>
+        {% endif %}
     </div>
 </div>
 {% include 'bottom.html'%}

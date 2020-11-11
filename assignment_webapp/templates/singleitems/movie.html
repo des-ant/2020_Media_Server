@@ -31,6 +31,9 @@
         {% else %}
             <h2 class="title"> Invalid Movie ID</h2>
         {% endif %}
+        {% if session.is_superuser %}
+        <a class="pure-button" href="{{ url_for('delete_page')}}">Delete Movie</a>
+        {% endif %}
 
     </div>
 </div>

@@ -86,6 +86,9 @@
         {% else %}
         <h2 class="title"> Invalid podcast ID</h2>
         {% endif %}
+    {% if session.is_superuser %}
+    <a class="pure-button" href="{{ url_for('delete_page')}}">Delete Podcast</a>
+    {% endif %}
     </div>
 </div>
 {% include 'bottom.html'%}

@@ -2,8 +2,10 @@
 <div class="content">
     <div class="container details">
         <!-- Check if We have a valid Album -->
+
         {% if album | length > 0 %}
             <h2 class="title"> {{album[0].album_title}}</h2>
+
             <hr/>
             <h3> Artworks </h3>
             {% for instance in album %}
@@ -51,6 +53,10 @@
             </div>
         {% else %}
             <h2 class="title"> Invalid Album ID</h2>
+        {% endif %}
+
+        {% if session.is_superuser %}
+        <a class="pure-button" href="{{ url_for('delete_page')}}">Delete Album</a>
         {% endif %}
     </div>
 </div>
