@@ -830,7 +830,23 @@ def add_song():
     #############################################################################
 
     page['title'] = 'Song Creation' # Add the title
+
+    # Get a list of all artists from the database
+    allartists = None
+    allartists = database.get_allartists()
+
+    # Data integrity checks
+    if allartists == None:
+        allartists = []
     
+    # Get a list of all song genres from the database
+    allsonggenres = None
+    allsonggenres = database.get_allsonggenres()
+
+    # Data integrity checks
+    if allsonggenres == None:
+        allsonggenres = []
+
     # Set up some variables to manage the post returns
     songs = None
     print("request form is:")
@@ -903,7 +919,9 @@ def add_song():
         return render_template('createitems/createsong.html',
                            session=session,
                            page=page,
-                           user=user_details)
+                           user=user_details,
+                           allartists=allartists,
+                           allsonggenres=allsonggenres)
 
 
 #####################################################

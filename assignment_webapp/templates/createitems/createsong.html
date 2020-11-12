@@ -30,11 +30,25 @@
         <form class="Add" method="POST" action="{{url_for('add_song')}}">
 
             Song title: <input type="text" name="song_title" value="Empty Song" placeholder="Song name">
-            <br/> Song length: <input type="text" name="length" value="0" placeholder="Length in seconds">
+            <br/> Song length: <input type="number" name="length" value="0" placeholder="Length in seconds" min="0">
             <br/> Storage location: <input type="text" name="storage_location" value="no location" placeholder="Storage location">
-            <br/> Artist ID: <input type="text" name="artist_id" value="19" placeholder="Artist ID as number">
+            <br/>
+            <label for="artist_id">Choose an artist:</label>
+            <select name="artist_id">
+                {% for instance in allartists %}
+                <option value="{{ instance.artist_id }}" {% if instance.artist_id==19 %} selected="selected"{% endif %}>{{instance.artist_name}}</option>
+                {% endfor %}
+            </select>
+            <!-- <br/> Artist ID: <input type="text" name="artist_id" value="19" placeholder="Artist ID as number"> -->
             <br/> Description: <input type="text" name="description" value="no description" placeholder="Description">
-            <br/> Song Genre: <input type="text" name="song_genre" value="pop" placeholder="Enter genre e.g. pop">
+            <br/>
+            <label for="song_genre">Choose an song genre:</label>
+            <select name="song_genre">
+                {% for instance in allsonggenres %}
+                <option value="{{ instance.md_value }}" {% if instance.md_value=="pop" %} selected="selected"{% endif %}>{{instance.md_value}}</option>
+                {% endfor %}
+            </select>
+            <!-- <br/> Song Genre: <input type="text" name="song_genre" value="pop" placeholder="Enter genre e.g. pop"> -->
             <br/> Artwork: <input type="text" name="artwork" value="notfound.png" placeholder="notfound.png">
             <br/>
             <button class="flat" type="submit">Add</button>
