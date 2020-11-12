@@ -905,6 +905,11 @@ def add_song():
                            page=page,
                            user=user_details)
 
+
+#####################################################
+#   New Functionality
+#   User Profile Page
+#####################################################
 # new function for profile page
 @app.route('/profile')
 def profile_page():
