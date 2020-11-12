@@ -904,3 +904,32 @@ def add_song():
                            session=session,
                            page=page,
                            user=user_details)
+
+# new function for profile page
+@app.route('/profile')
+def profile_page():
+    """
+    Profile Page
+    """
+    # # Check if the user is logged in, if not: back to login.
+    if('logged_in' not in session or not session['logged_in']):
+        return redirect(url_for('login'))
+
+
+    page['title'] = 'Profile'
+
+    # Get a list of all Albums from the database
+    profile = None
+    profile = database.profile_page(user_details['username'])
+
+
+    # Data integrity checks
+    if profile == None:
+        profile = []
+
+
+    return render_template('profile/profile.html',
+                           session=session,
+                           page=page,
+                           user=user_details,
+                           profile=profile)
