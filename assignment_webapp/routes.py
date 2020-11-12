@@ -52,6 +52,9 @@ def index():
     # Get a list of in-progress items
     user_in_progress_items = None
     user_in_progress_items = database.user_in_progress_items(user_details['username'])
+
+
+
     # Data integrity checks
     if user_playlists == None:
         user_playlists = []
@@ -938,3 +941,40 @@ def profile_page():
                            page=page,
                            user=user_details,
                            profile=profile)
+
+
+@app.route('/changepassword', methods=['POST','GET'])
+def change_password():
+    if('logged_in' not in session or not session['logged_in']):
+            return redirect(url_for('login'))
+
+
+    page['title'] = 'change password'
+
+    changes = None
+    print("request form is:")
+    newdict = {}
+    print(request.form)
+
+    if request.method == 'POST':
+        if ('new password' not in request.form or not request.form['new password']):
+            newdict['new password'] = 'empty'
+        else:
+            newdict['new password'] = request.form['new password']
+            print("We have a value: ",newdict['new password'])
+
+        changes = database.change_password(user_details['username'],newdict['new password'])
+    else:
+        return render_template('profile/changepwd.html',
+                                session=session,
+                               page=page,
+                               user=user_details)
+
+    if changes == None:
+        changes = []
+
+    return render_template('profile/changepwd.html',
+                            session = session,
+                            page = page,
+                            user = user_details,
+                                changes = changes)

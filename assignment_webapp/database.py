@@ -183,7 +183,8 @@ def check_login_secure(username, password):
         sql = """
                 SELECT *
                 FROM mediaserver.useraccount
-                WHERE username=%s AND password = public.crypt(%s, password);
+                WHERE username=%s AND
+                public.crypt(password,'whateverthepasswordis') = public.crypt(%s, 'whateverthepasswordis');
                 """
         print(username)
         print(password)
@@ -200,18 +201,46 @@ def check_login_secure(username, password):
     conn.close()                    # Close the connection to the db
     return None
 
-# def change_password(username, password):
-#     conn = database_connect()
-#     if (conn is None):
-#         return None
-#     cur = conn.cursor()
-#     try:
-#         sql = """
-#         select *
-#         from mediaserver.useraccount
-#         WHERE username=%s AND password = public.crypt(%s, %s);
-#
-#         """
+def change_password(username,newpassword):
+    conn = database_connect()
+    if (conn is None):
+        return None
+    cur = conn.cursor()
+    try:
+
+        sql = """
+
+        update mediaserver.useraccount
+        set
+            password = %s
+        where username = %s;
+
+
+
+        """
+
+        print(username)
+        print(newpassword)
+
+
+        cur.execute(sql,(username,newpassword))
+        conn.commit()
+        r= cur.fetchone()
+        print(r)
+
+
+
+#         r = dictfetchone(cur,sql,(newpassword,username))
+#         print(r)
+        cur.close()                     # Close the cursor
+        conn.close()                    # Close the connection to the db
+        print("change successful")
+        return r
+    except:
+        print("Change failed")
+    cur.close()
+    conn.close()
+    return None
 
 #####################################################
 #   Is Superuser? -

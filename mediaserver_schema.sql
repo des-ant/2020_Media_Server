@@ -376,5 +376,14 @@ $$
 $$
 LANGUAGE plpgsql;
 
---create or replace function mediaserver.changePassword(
---)
+create or replace function mediaserver.changePassword(
+      username VARCHAR(50),
+      newpassword VARCHAR(100)
+)
+return void as
+$BODY$
+    update mediaserver.useraccount
+    set password = newpassword
+
+
+$BODY$

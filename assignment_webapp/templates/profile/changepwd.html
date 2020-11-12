@@ -1,0 +1,17 @@
+{% include 'top.html' %}
+    <div class="content">
+        <div class = "container details">
+            <h2 class="title"> Change password </h2>
+
+            <form class="Change Password" method="POST" action="{{url_for('change_password')}}">
+                New password <input type = "text" name = "new password" value = "new password", placeholder="NEW PASSWORD">
+                <br/>
+                <button class="flat" type="submit">submit</button>
+
+            </form>
+        </div>
+
+
+
+    </div>
+{% include 'bottom.html' %}
