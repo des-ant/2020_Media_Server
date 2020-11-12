@@ -1,7 +1,22 @@
 {% include 'top.html' %}
 <div class="content">
     <hr class="container details">
-        <h2 class="title">Profile</h2>
+        <h1 class="title">Profile</h1>
+    </div>
+        <table class = "styled">
+            <thead>
+                <tr>
+                    <td>Contact Detail</td>
+                    <td>Contact Type</td>
+                </tr>
+            </thead>
+            <tbody>
+            {% for instance in profile %}
+                <td> {{ instance.contact_type_value }}</td>
+                <td> {{ instance.contact_type_name }}</td>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% include 'bottom.html' %}
