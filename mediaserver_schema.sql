@@ -328,12 +328,10 @@ $BODY$
         SELECT media_id, title, songlength from ins1
     )
     , ins5 AS (
-        INSERT INTO mediaserver.metadata (md_type_id,md_value)
-        SELECT MDT.md_type_id, MD.md_value
+        SELECT MDT.md_type_id, MD.md_id AS genre_md_id, MD.md_value
         FROM mediaserver.MetaDataType MDT
 			LEFT JOIN mediaserver.MetaData MD ON (MDT.md_type_id = MD.md_type_id)
 		WHERE MDT.md_type_name = 'song genre' AND MD.md_value = songgenre
-        RETURNING md_id AS genre_md_id
     )
     , ins6 AS (
         INSERT INTO mediaserver.Song_Artists (song_id,performing_artist_id)

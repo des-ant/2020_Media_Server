@@ -1496,6 +1496,48 @@ def get_last_song():
     conn.close()                    # Close the connection to the db
     return None
 
+
+
+#####################################################
+#   Get all song genres
+#####################################################
+def get_allsonggenres():
+    """
+    Get all the song genres in your media server
+    """
+
+    conn = database_connect()
+    if(conn is None):
+        return None
+    cur = conn.cursor()
+    try:
+        # Try executing the SQL and get from the database
+        sql = """
+          SELECT MD.md_id, MD.md_value
+            FROM mediaserver.metadata MD
+                 LEFT JOIN mediaserver.metadatatype MDT ON (MD.md_type_id = MDT.md_type_id)
+           WHERE MDT.md_type_name = 'song genre'
+        ORDER BY MD.md_value;
+        """
+
+        r = dictfetchall(cur,sql)
+        print("return val is:")
+        print(r)
+        cur.close()                     # Close the cursor
+        conn.close()                    # Close the connection to the db
+        return r
+    except:
+        # If there were any errors, return a NULL row printing an error to the debug
+        print("Unexpected error getting All Song Genres:", sys.exc_info()[0])
+        raise
+    cur.close()                     # Close the cursor
+    conn.close()                    # Close the connection to the db
+    return None
+
+
+#####################################################
+#   Profile page
+#####################################################
 def profile_page(username):
     """
     Get all the latest entered song in your media server
