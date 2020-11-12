@@ -325,11 +325,12 @@ def user_in_progress_items(username):
         ###################################################################################
 
         sql = """
-        SELECT media_id, play_count as playcount, progress, lastviewed, storage_location
-          FROM mediaserver.useraccount
-	           NATURAL JOIN mediaserver.usermediaconsumption
-	           NATURAL JOIN mediaserver.mediaitem
-	     WHERE username=%s AND progress<100;
+          SELECT media_id, play_count as playcount, progress, lastviewed, storage_location
+            FROM mediaserver.useraccount
+	             NATURAL JOIN mediaserver.usermediaconsumption
+	             NATURAL JOIN mediaserver.mediaitem
+	       WHERE username=%s AND progress<100
+        ORDER BY lastviewed DESC;
         """
 
         r = dictfetchall(cur,sql,(username,))
