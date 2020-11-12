@@ -365,7 +365,7 @@ def get_allartists():
         from
             mediaserver.artist a left outer join mediaserver.artistmetadata amd on (a.artist_id=amd.artist_id)
         group by a.artist_id, a.artist_name
-        order by a.artist_name;"""
+        order by a.artist_id;"""
 
         r = dictfetchall(cur,sql)
         print("return val is:")
@@ -531,7 +531,8 @@ def get_alltvshows():
           SELECT tvshow_id, tvshow_title, COUNT(tvshow_episode_title)
             FROM mediaserver.tvshow
                  NATURAL JOIN mediaserver.tvepisode
-        GROUP BY tvshow_id;
+        GROUP BY tvshow_id
+        ORDER BY tvshow_id;
         """
 
         r = dictfetchall(cur,sql)
