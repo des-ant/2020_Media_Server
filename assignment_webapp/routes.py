@@ -91,7 +91,7 @@ def login():
     if(request.method == 'POST'):
         # submitting details
         # The form gives back EmployeeID and Password
-        login_return_data = database.check_login(
+        login_return_data = database.check_login_secure(
             request.form['username'],
             request.form['password']
         )

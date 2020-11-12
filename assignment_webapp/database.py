@@ -174,6 +174,45 @@ def check_login(username, password):
     return None
 
 
+def check_login_secure(username, password):
+    conn = database_connect()
+    if(conn is None):
+        return None
+    cur = conn.cursor()
+    try:
+        sql = """
+                SELECT *
+                FROM mediaserver.useraccount
+                WHERE username=%s AND password = public.crypt(%s, password);
+                """
+        print(username)
+        print(password)
+
+        r = dictfetchone(cur,sql,(username,password))
+        print(r)
+        cur.close()                     # Close the cursor
+        conn.close()                    # Close the connection to the db
+        return r
+    except:
+        # If there were any errors, return a NULL row printing an error to the debug
+        print("Error Invalid Login")
+    cur.close()                     # Close the cursor
+    conn.close()                    # Close the connection to the db
+    return None
+
+# def change_password(username, password):
+#     conn = database_connect()
+#     if (conn is None):
+#         return None
+#     cur = conn.cursor()
+#     try:
+#         sql = """
+#         select *
+#         from mediaserver.useraccount
+#         WHERE username=%s AND password = public.crypt(%s, %s);
+#
+#         """
+
 #####################################################
 #   Is Superuser? -
 #   is this required? we can get this from the login information

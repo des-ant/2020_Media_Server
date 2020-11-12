@@ -375,3 +375,6 @@ $$
     END;
 $$
 LANGUAGE plpgsql;
+
+--create or replace function mediaserver.changePassword(
+--)
