@@ -374,15 +374,21 @@ $$
 $$
 LANGUAGE plpgsql;
 
-create or replace function mediaserver.changePassword(
-      username VARCHAR(50),
-      newpassword VARCHAR(100)
-)
-returns void as
-$BODY$
-    update mediaserver.useraccount
-    set password = newpassword
+
+-- Returns encrytped password to trigger function
+CREATE OR REPLACE FUNCTION mediaserver.triggerPassword()
+RETURNS trigger AS
+$$
+    BEGIN
+        NEW.password := public.crypt(NEW.password, public.gen_salt('bf', 8));
+        RETURN NEW;
+    END;
+$$
+LANGUAGE plpgsql;
 
 
-$BODY$
-LANGUAGE sql;
+-- Trigger function, hash password before inserting into useraccount
+CREATE TRIGGER encrypt_userpassword
+BEFORE INSERT ON mediaserver.useraccount
+FOR EACH ROW
+EXECUTE PROCEDURE mediaserver.triggerPassword()
