@@ -10,11 +10,12 @@
                         <!-- Password field -->
                         <input type="password" name="new password" value="" 
                         placeholder="Enter your new password" maxlength="100" minlength="8" size="23" id="myInput">
+                        <span class="pure-form-message-inline">Password must be at least 8 characters</span>
                     </div>
                     <!-- An element to toggle between password visibility -->
-                    <div class="pure-control-group">
+                    <div class="pure-controls">
                         <label for="aligned-cb" class="pure-checkbox">
-                            <input type="checkbox" id="aligned-cb" onclick="showPassword()" > Show Password</label>
+                            <input type="checkbox" onclick="showPassword()" id="aligned-cb"> Show Password</label>
                         <br/>
                         <br/>
                         <button class="flat" type="submit">Submit</button>
