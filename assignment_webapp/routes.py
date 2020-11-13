@@ -910,11 +910,21 @@ def add_song():
         songs = database.add_song_to_db(newdict['song_title'],newdict['length'],newdict['storage_location'],newdict['artist_id'],newdict['description'],newdict['song_genre'])
 
 
+
         max_song_id = database.get_last_song()[0]['song_id']
         print(songs)
-        if songs is not None:
-            max_song_id = songs[0]
 
+        # If it's null, show error message
+        if songs is None:
+            songs = []
+            page['bar'] = False
+            flash("Song could not be added, please try again")
+            return redirect(url_for('add_song'))
+
+        # If there was no error, show success message
+        max_song_id = songs[0]
+        page['bar'] = True
+        flash('New song has been successfully added')
         # NOTE :: YOU WILL NEED TO MODIFY THIS TO PASS THE APPROPRIATE VARIABLES
         # ideally this would redirect to your newly added song
         return single_song(max_song_id)
