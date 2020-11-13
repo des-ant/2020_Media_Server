@@ -29,31 +29,50 @@
         -->
         <form class="pure-form pure-form-aligned" method="POST" action="{{url_for('add_song')}}">
             <fieldset>
-                Song title: <input type="text" name="song_title" value="Empty Song" placeholder="Song name">
-                <br/> Song length: <input type="number" name="length" value="0" placeholder="Length in seconds" min="0">
-                <br/> Storage location: <input type="text" name="storage_location" value="no location" placeholder="Storage location">
-                <br/>
-                <label for="artist_id">Choose an artist:</label>
-                <select name="artist_id">
-                    {% for instance in allartists %}
-                    <option value="{{ instance.artist_id }}" {% if instance.artist_id==19 %} selected="selected"{% endif %}>{{instance.artist_name}}</option>
-                    {% endfor %}
-                </select>
-                <br/> Description: <input type="text" name="description" value="no description" placeholder="Description">
-                <br/>
-                <label for="song_genre">Choose an song genre:</label>
-                <select name="song_genre">
-                    {% for instance in allsonggenres %}
-                    <option value="{{ instance.md_value }}" {% if instance.md_value=="pop" %} selected="selected"{% endif %}>{{instance.md_value}}</option>
-                    {% endfor %}
-                </select>
-                <br/> Artwork: <input type="text" name="artwork" value="notfound.png" placeholder="notfound.png">
-                <br/>
-                <button class="flat" type="submit">Add</button>
-                <br/>
-                <hr/>
-                <hr/>
-                <hr/>
+                <div class="pure-control-group">
+                    <label for="song_title">Song title: </label>
+                    <input type="text" name="song_title" value="Empty Song" placeholder="Song name">
+                </div>
+                <div class="pure-control-group">
+                    <label for="length">Song length:</label>
+                    <input type="number" name="length" value="0" placeholder="Length in seconds" min="0">
+                </div>
+                <div class="pure-control-group">
+                    <label for="storage_location"> Storage location:</label>
+                    <input type="text" name="storage_location" value="no location" placeholder="Storage location">
+                </div>
+                <div class="pure-control-group">
+                    <label for="artist_id">Choose an artist:</label>
+                    <select name="artist_id">
+                        {% for instance in allartists %}
+                        <option value="{{ instance.artist_id }}" {% if instance.artist_id==19 %} selected="selected"{% endif %}>{{instance.artist_name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="pure-control-group">
+                    <label for="description">Description:</label>
+                    <input type="text" name="description" value="no description" placeholder="Description">
+                </div>
+                <div class="pure-control-group">
+                    <label for="song_genre">Choose an song genre:</label>
+                    <select name="song_genre">
+                        {% for instance in allsonggenres %}
+                        <option value="{{ instance.md_value }}" {% if instance.md_value=="pop" %} selected="selected"{% endif %}>{{instance.md_value}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="pure-control-group">
+                    <label for="artwork"> Artwork:</label>
+                    <input type="text" name="artwork" value="notfound.png" placeholder="notfound.png">
+                </div>
+                <div class="pure-controls">
+                    <button class="flat" type="submit">Add</button>
+                </div>
+                    <br/>
+                    <hr/>
+                    <hr/>
+                    <hr/>
+
             </fieldset>
 
         </form>
