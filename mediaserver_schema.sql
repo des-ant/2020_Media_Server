@@ -378,10 +378,11 @@ create or replace function mediaserver.changePassword(
       username VARCHAR(50),
       newpassword VARCHAR(100)
 )
-return void as
+returns void as
 $BODY$
     update mediaserver.useraccount
     set password = newpassword
 
 
 $BODY$
+LANGUAGE sql;
