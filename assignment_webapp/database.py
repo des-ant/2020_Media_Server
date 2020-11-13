@@ -184,7 +184,7 @@ def check_login_secure(username, password):
                 SELECT *
                 FROM mediaserver.useraccount
                 WHERE username=%s AND
-                public.crypt(password,'whateverthepasswordis') = public.crypt(%s, 'whateverthepasswordis');
+                password = public.crypt(%s,password);
                 """
         print(username)
         print(password)
@@ -209,14 +209,9 @@ def change_password(username,newpassword):
     try:
 
         sql = """
-
         update mediaserver.useraccount
-        set
-            password = %s
+        set password = %s
         where username = %s;
-
-
-
         """
 
         print(username)
