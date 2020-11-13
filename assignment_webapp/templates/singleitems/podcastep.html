@@ -18,7 +18,7 @@ h1 {
         Display All Relevant Podcast Episode Infromation including meta data
         -->
 
-        {% if podcastep %}
+        {% if podcastep | length > 0 %}
         <h1 class="title"> {{podcastep[0].podcast_episode_title}} </h1>
         <h3 style="color:black;text-align:center;"> Podcast Episode ID: {{podcastep[0].media_id}}</h3>
         <h3 style="color:black;text-align:center;"> Podcast Episode URI: {{podcastep[0].podcast_episode_uri}}</h3>
