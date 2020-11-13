@@ -209,30 +209,30 @@ def change_password(username,newpassword):
     try:
 
         sql = """
-        update mediaserver.useraccount
-        set password = %s
-        where username = %s;
+        UPDATE mediaserver.useraccount
+           SET password=%s
+         WHERE username=%s;
         """
 
         print(username)
         print(newpassword)
 
 
-        cur.execute(sql,(username,newpassword))
-        conn.commit()
-        r= cur.fetchone()
-        print(r)
-
-
+        cur.execute(sql,(newpassword,username))
+        conn.commit()                   # Commit the transaction
+        r = cur.rowcount
+        print(r, "record(s) affected")
         cur.close()                     # Close the cursor
         conn.close()                    # Close the connection to the db
         print("change successful")
         return r
     except:
         print("Change failed")
-    cur.close()
-    conn.close()
+        raise
+    cur.close()                     # Close the cursor
+    conn.close()                    # Close the connection to the db
     return None
+
 
 #####################################################
 #   Is Superuser? -

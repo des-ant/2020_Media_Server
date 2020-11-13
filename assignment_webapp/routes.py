@@ -982,17 +982,22 @@ def change_password():
             print("We have a value: ",newdict['new password'])
 
         changes = database.change_password(user_details['username'],newdict['new password'])
+
+        # If it's null, show error message
+        if changes is None:
+            changes = []
+            page['bar'] = False
+            flash("Password could not be changed, please try again")
+            return redirect(url_for('change_password'))
+
+        # If there was no error, return to profile page
+        page['bar'] = True
+        flash('Password has been successfully updated')
+
+        return redirect(url_for('profile_page'))
+
     else:
         return render_template('profile/changepwd.html',
                                 session=session,
                                page=page,
                                user=user_details)
-
-    if changes == None:
-        changes = []
-
-    return render_template('profile/changepwd.html',
-                            session = session,
-                            page = page,
-                            user = user_details,
-                                changes = changes)
