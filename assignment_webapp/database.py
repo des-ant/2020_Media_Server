@@ -224,9 +224,6 @@ def change_password(username,newpassword):
         print(r)
 
 
-
-#         r = dictfetchone(cur,sql,(newpassword,username))
-#         print(r)
         cur.close()                     # Close the cursor
         conn.close()                    # Close the connection to the db
         print("change successful")

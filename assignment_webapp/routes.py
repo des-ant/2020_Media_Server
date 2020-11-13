@@ -967,7 +967,7 @@ def change_password():
             return redirect(url_for('login'))
 
 
-    page['title'] = 'change password'
+    page['title'] = 'Change Password'
 
     changes = None
     print("request form is:")
@@ -976,7 +976,7 @@ def change_password():
 
     if request.method == 'POST':
         if ('new password' not in request.form or not request.form['new password']):
-            newdict['new password'] = 'empty'
+            newdict['new password'] = None
         else:
             newdict['new password'] = request.form['new password']
             print("We have a value: ",newdict['new password'])

@@ -1,27 +1,32 @@
 {% include 'top.html' %}
 <div class="content">
-    <hr class="container details">
-    <a class="pure-button"  href="{{url_for('change_password')}}">Change Password</a>
-    <a class="pure-button">Change Contact Detail</a>
-        <h1 class="title">Profile</h1>
+    <div class="container details">
+        <h2 class="title">Profile</h2>
+        <hr/>
+        <a class="pure-button"  href="{{url_for('change_password')}}">Change Password</a>
+        <a class="pure-button">Add Contact Details</a>
+        <a class="pure-button">Change Contact Details</a>
+
+
+
+        <div>
+            <table class ="styled">
+                <thead>
+                    <tr>
+                        <td style="text-align: center">Contact Type</td>
+                        <td>Contact Details</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for instance in profile %}
+                        <td style="text-align: center"> {{ instance.contact_type_name }}</td>
+                        <td> {{ instance.contact_type_value }}</td>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        
     </div>
-        <table class = "styled">
-            <thead>
-                <tr>
-                    <td>Contact Detail</td>
-                    <td>Contact Type</td>
-                </tr>
-            </thead>
-            <tbody>
-            {% for instance in profile %}
-                <td> {{ instance.contact_type_value }}</td>
-                <td> {{ instance.contact_type_name }}</td>
-            {% endfor %}
-            </tbody>
-        </table>
-
-    </div>
-
-
 </div>
 {% include 'bottom.html' %}

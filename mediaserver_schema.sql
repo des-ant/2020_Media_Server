@@ -389,6 +389,6 @@ LANGUAGE plpgsql;
 
 -- Trigger function, hash password before inserting into useraccount
 CREATE TRIGGER encrypt_userpassword
-BEFORE INSERT ON mediaserver.useraccount
+BEFORE INSERT OR UPDATE ON mediaserver.useraccount
 FOR EACH ROW
 EXECUTE PROCEDURE mediaserver.triggerPassword()

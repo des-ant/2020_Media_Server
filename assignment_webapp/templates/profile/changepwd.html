@@ -3,15 +3,29 @@
         <div class = "container details">
             <h2 class="title"> Change password </h2>
 
-            <form class="Change Password" method="POST" action="{{url_for('change_password')}}">
-                New password <input type = "text" name = "new password" value = "new password", placeholder="NEW PASSWORD">
-                <br/>
-                <button class="flat" type="submit">submit</button>
-
+            <form class="pure-form pure-form-aligned" method="POST" action="{{url_for('change_password')}}">
+                <fieldset>
+                    <div class="pure-control-group">
+                        <label for="new password">New Password:</label>
+                        <!-- Password field -->
+                        <input type="password" name="new password" value="" 
+                        placeholder="Enter your new password" maxlength="100" minlength="8" size="23" id="myInput">
+                    </div>
+                    <!-- An element to toggle between password visibility -->
+                    <div class="pure-control-group">
+                        <label for="aligned-cb" class="pure-checkbox">
+                            <input type="checkbox" id="aligned-cb" onclick="showPassword()" > Show Password</label>
+                        <br/>
+                        <br/>
+                        <button class="flat" type="submit">Submit</button>
+                    </div>
+                </fieldset>
             </form>
         </div>
 
 
 
     </div>
+    <script type="text/javascript"
+    src="{{ url_for('static', filename='scripts/changepassword.js') }}"></script>
 {% include 'bottom.html' %}
