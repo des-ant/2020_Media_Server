@@ -954,7 +954,7 @@ def profile_page():
 
     page['title'] = 'Profile'
 
-    # Get a list of all Albums from the database
+    # Get user contact details
     profile = None
     profile = database.profile_page(user_details['username'])
 
@@ -971,6 +971,11 @@ def profile_page():
                            profile=profile)
 
 
+#####################################################
+#   New Functionality
+#   Change password
+#####################################################
+# new function for profile page
 @app.route('/changepassword', methods=['POST','GET'])
 def change_password():
     if('logged_in' not in session or not session['logged_in']):
@@ -1011,3 +1016,116 @@ def change_password():
                                 session=session,
                                page=page,
                                user=user_details)
+
+
+#####################################################
+#   New Functionality
+#   Change contact details
+#####################################################
+# new function for profile page
+@app.route('/changedetails', methods=['POST','GET'])
+def change_details():
+    if('logged_in' not in session or not session['logged_in']):
+            return redirect(url_for('login'))
+
+
+    page['title'] = 'Change Details'
+
+    # Get user contact details
+    profile = None
+    profile = database.profile_page(user_details['username'])
+
+    # Data integrity checks
+    if profile == None:
+        profile = []
+
+    changes = None
+    print("request form is:")
+    newdict = {}
+    print(request.form)
+
+    if request.method == 'POST':
+        if ('new password' not in request.form or not request.form['new password']):
+            newdict['new password'] = None
+        else:
+            newdict['new password'] = request.form['new password']
+            print("We have a value: ",newdict['new password'])
+
+        changes = database.change_password(user_details['username'],newdict['new password'])
+
+        # If it's null, show error message
+        if changes is None:
+            changes = []
+            page['bar'] = False
+            flash("Password could not be changed, please try again")
+            return redirect(url_for('change_password'))
+
+        # If there was no error, return to profile page
+        page['bar'] = True
+        flash('Password has been successfully updated')
+
+        return redirect(url_for('profile_page'))
+
+    else:
+        return render_template('profile/changedetails.html',
+                                session=session,
+                               page=page,
+                               user=user_details,
+                               profile=profile)
+
+
+#####################################################
+#   New Functionality
+#   Add contact details
+#####################################################
+# new function for profile page
+@app.route('/adddetails', methods=['POST','GET'])
+def add_details():
+    if('logged_in' not in session or not session['logged_in']):
+            return redirect(url_for('login'))
+
+
+    page['title'] = 'Change Details'
+
+
+    # Get a list of all artists from the database
+    contacttypes = None
+    contacttypes = database.get_contacttypes()
+
+    # Data integrity checks
+    if contacttypes == None:
+        contacttypes = []
+
+    changes = None
+    print("request form is:")
+    newdict = {}
+    print(request.form)
+
+    if request.method == 'POST':
+        if ('new password' not in request.form or not request.form['new password']):
+            newdict['new password'] = None
+        else:
+            newdict['new password'] = request.form['new password']
+            print("We have a value: ",newdict['new password'])
+
+        changes = database.change_password(user_details['username'],newdict['new password'])
+
+        # If it's null, show error message
+        if changes is None:
+            changes = []
+            page['bar'] = False
+            flash("Password could not be changed, please try again")
+            return redirect(url_for('change_password'))
+
+        # If there was no error, return to profile page
+        page['bar'] = True
+        flash('Password has been successfully updated')
+
+        return redirect(url_for('profile_page'))
+
+    else:
+        return render_template('profile/adddetails.html',
+                                session=session,
+                               page=page,
+                               user=user_details,
+                               contacttypes=contacttypes)

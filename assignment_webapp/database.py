@@ -1542,12 +1542,13 @@ def profile_page(username):
     try:
         # Try executing the SQL and get from the database
         sql = """
-        select contact_type_value,contact_type_name
-        from mediaserver.useraccount 
-        natural join mediaserver.contactmethod 
-        natural join mediaserver.contacttype
-        where username =%s;
-        
+          SELECT contact_type_id, contact_type_name, contact_type_value
+            FROM mediaserver.useraccount 
+                 NATURAL JOIN mediaserver.contactmethod 
+                 NATURAL JOIN mediaserver.contacttype
+           WHERE username = %s
+		GROUP BY contact_type_id, contact_type_name, contact_type_value
+		ORDER BY contact_type_id;
         """
 
         r = dictfetchone(cur,sql, (username,))
@@ -1563,6 +1564,41 @@ def profile_page(username):
     cur.close()                     # Close the cursor
     conn.close()                    # Close the connection to the db
     return None
+
+
+#####################################################
+#   Get all contact types
+#####################################################
+def get_contacttypes():
+    """
+    Get all contact types in your media server
+    """
+
+    conn = database_connect()
+    if(conn is None):
+        return None
+    cur = conn.cursor()
+    try:
+        # Try executing the SQL and get from the database
+        sql = """
+        SELECT *
+          FROM mediaserver.contacttype;
+        """
+
+        r = dictfetchall(cur,sql)
+        print("return val is:")
+        print(r)
+        cur.close()                     # Close the cursor
+        conn.close()                    # Close the connection to the db
+        return r
+    except:
+        # If there were any errors, return a NULL row printing an error to the debug
+        print("Unexpected error getting all contact types:", sys.exc_info()[0])
+        raise
+    cur.close()                     # Close the cursor
+    conn.close()                    # Close the connection to the db
+    return None
+
 
 
 

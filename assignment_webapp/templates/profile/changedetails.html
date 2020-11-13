@@ -1,0 +1,42 @@
+{% include 'top.html' %}
+<div class="content">
+    <div class="container details">
+        <h2 class="title">Change contact details</h2>
+
+        <form class="pure-form pure-form-aligned" method="POST" action="{{url_for('change_password')}}">
+            <fieldset>
+                {% for instance in profile %}
+                    <div class="pure-control-group">
+                        <label for="{{ instance.contact_type_name }}">{{ instance.contact_type_name }}</label>
+                        <input type="text" name="{{ instance.contact_type_name }}"
+                        value="{{ instance.contact_type_value }}"
+                        placeholder="{{ instance.contact_type_value }}"
+                        maxlength="100" minlength="">
+                    </div>
+                {% endfor %}
+            </fieldset>
+        </form>
+
+
+
+        <div>
+            <table class ="styled">
+                <thead>
+                    <tr>
+                        <td style="text-align: center">Contact Type</td>
+                        <td>Contact Details</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for instance in profile %}
+                        <td style="text-align: center"> {{ instance.contact_type_name }}</td>
+                        <td> {{ instance.contact_type_value }}</td>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        
+    </div>
+</div>
+{% include 'bottom.html' %}
