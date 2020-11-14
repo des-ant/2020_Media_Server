@@ -1,7 +1,7 @@
 {% include 'top.html' %}
 <div class="content">
     <div class="container details">
-        <h2 class="title">Change contact details</h2>
+        <h2 class="title">Add contact details</h2>
 
         <form class="pure-form pure-form-stacked" method="POST" action="{{url_for('change_password')}}">
             <fieldset>
@@ -18,9 +18,12 @@
                         <label for="contact-type-value" id="contactLabel">Email</label>
                         <input type="email" name="contact-type-value" class="pure-u-23-24" id="contactVal"
                         placeholder="name.lastname@email.com" value="">
-                        <span class="pure-form-message">Phone number format: 0412345678</span>
+                        <span class="pure-form-message" id="telMsg"></span>
                     </div>
                 </div>
+                <br/>
+                <a href="{{ url_for('profile_page') }}" class="pure-button">Cancel</a>
+                <button class="flat pure-button" type="submit">Add details</button>
             </fieldset>
         </form>
     </div>

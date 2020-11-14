@@ -12,27 +12,29 @@ function setField() {
   var selectorVal = selector.options[selector.selectedIndex].text;
   var field = document.getElementById("contactVal");
   var label = document.getElementById("contactLabel");
-  console.log(selectorVal);
-  if (selectorVal == "email") {
-    field.type = "email";
+  var telMsg = document.getElementById("telMsg");
+  if ("email".localeCompare(selectorVal, 'en', { sensitivity: 'base' }) == 0) {
     label.innerHTML = "Email";
+    field.type = "email";
+    field.removeAttribute("pattern");
     field.setAttribute("placeholder", "name.lastname@email.com");
     field.value = "";
-    // field.placeholder = "name.lastname@email.com";
-  } else if (selectorVal == "phone") {
-    field.type = "tel";
+    telMsg.innerHTML = "";
+  }
+  if ("phone".localeCompare(selectorVal, 'en', { sensitivity: 'base' }) == 0) {
     label.innerHTML = "Phone";
+    field.type = "tel";
     field.setAttribute("pattern", "[0-9]{10}");
     field.setAttribute("placeholder", "0412345678");
     field.value = "";
-    // field.pattern = "[0-9]{10}";
-    // field.placeholder = "0412345678";
-  } else {
-    field.type = "text";
+    telMsg.innerHTML = "Phone number format: 0412345678";
+  }
+  if ("social".localeCompare(selectorVal, 'en', { sensitivity: 'base' }) == 0) {
     label.innerHTML = "Social";
-    field.setAttribute("pattern", "[0-9]{10}");
+    field.type = "text";
+    field.removeAttribute("pattern");
     field.setAttribute("placeholder", "social.com/account");
     field.value = "";
-    // field.placeholder = "social.com/account";
+    telMsg.innerHTML = "";
   }
 }
