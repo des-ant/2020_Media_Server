@@ -201,39 +201,6 @@ def check_login_secure(username, password):
     conn.close()                    # Close the connection to the db
     return None
 
-def change_password(username,newpassword):
-    conn = database_connect()
-    if (conn is None):
-        return None
-    cur = conn.cursor()
-    try:
-
-        sql = """
-        UPDATE mediaserver.useraccount
-           SET password=%s
-         WHERE username=%s;
-        """
-
-        print(username)
-        print(newpassword)
-
-
-        cur.execute(sql,(newpassword,username))
-        conn.commit()                   # Commit the transaction
-        r = cur.rowcount
-        print(r, "record(s) affected")
-        cur.close()                     # Close the cursor
-        conn.close()                    # Close the connection to the db
-        print("change successful")
-        return r
-    except:
-        print("Change failed")
-        raise
-    cur.close()                     # Close the cursor
-    conn.close()                    # Close the connection to the db
-    return None
-
-
 #####################################################
 #   Is Superuser? -
 #   is this required? we can get this from the login information
@@ -1527,6 +1494,7 @@ def get_allsonggenres():
     return None
 
 
+
 #####################################################
 #   Profile page
 #####################################################
@@ -1551,7 +1519,7 @@ def profile_page(username):
 		ORDER BY contact_type_id;
         """
 
-        r = dictfetchone(cur,sql, (username,))
+        r = dictfetchall(cur,sql, (username,))
         print("return val is:")
         print(r)
         cur.close()                     # Close the cursor
@@ -1560,6 +1528,43 @@ def profile_page(username):
     except:
         # If there were any errors, return a NULL row printing an error to the debug
         print("Unexpected error adding a song:", sys.exc_info()[0])
+        raise
+    cur.close()                     # Close the cursor
+    conn.close()                    # Close the connection to the db
+    return None
+
+
+#####################################################
+#   Change password
+#####################################################
+
+def change_password(username,newpassword):
+    conn = database_connect()
+    if (conn is None):
+        return None
+    cur = conn.cursor()
+    try:
+
+        sql = """
+        UPDATE mediaserver.useraccount
+           SET password=%s
+         WHERE username=%s;
+        """
+
+        print(username)
+        print(newpassword)
+
+
+        cur.execute(sql,(newpassword,username))
+        conn.commit()                   # Commit the transaction
+        r = cur.rowcount
+        print(r, "record(s) affected")
+        cur.close()                     # Close the cursor
+        conn.close()                    # Close the connection to the db
+        print("Change successful")
+        return r
+    except:
+        print("Change failed")
         raise
     cur.close()                     # Close the cursor
     conn.close()                    # Close the connection to the db
@@ -1600,6 +1605,42 @@ def get_contacttypes():
     return None
 
 
+#####################################################
+#   Add contact detail
+#####################################################
+
+def add_details(username,contact_type_id,contact_type_value):
+    conn = database_connect()
+    if (conn is None):
+        return None
+    cur = conn.cursor()
+    try:
+
+        sql = """
+        INSERT INTO mediaserver.ContactMethod
+        VALUES (%s, %s, %s)
+        ON CONFLICT DO NOTHING;
+        """
+
+        print(username)
+        print(contact_type_id)
+        print(contact_type_value)
+
+
+        cur.execute(sql,(username,contact_type_id,contact_type_value))
+        conn.commit()                   # Commit the transaction
+        r = cur.rowcount
+        print(r, "record(s) affected")
+        cur.close()                     # Close the cursor
+        conn.close()                    # Close the connection to the db
+        print("Change successful")
+        return r
+    except:
+        print("Change failed")
+        raise
+    cur.close()                     # Close the cursor
+    conn.close()                    # Close the connection to the db
+    return None
 
 
 #  FOR MARKING PURPOSES ONLY

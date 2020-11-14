@@ -992,6 +992,9 @@ def change_password():
     if request.method == 'POST':
         if ('new password' not in request.form or not request.form['new password']):
             newdict['new password'] = None
+            page['bar'] = False
+            flash("Password could not be changed (missing values), please try again")
+            return redirect(url_for('change_password'))
         else:
             newdict['new password'] = request.form['new password']
             print("We have a value: ",newdict['new password'])
@@ -999,7 +1002,7 @@ def change_password():
         changes = database.change_password(user_details['username'],newdict['new password'])
 
         # If it's null, show error message
-        if changes is None:
+        if (changes is None or changes == 0):
             changes = []
             page['bar'] = False
             flash("Password could not be changed, please try again")
@@ -1031,25 +1034,23 @@ def change_details():
 
     page['title'] = 'Change Details'
 
-    # Get user contact details
-    profile = None
-    profile = database.profile_page(user_details['username'])
-
-    # Data integrity checks
-    if profile == None:
-        profile = []
-
     changes = None
     print("request form is:")
     newdict = {}
     print(request.form)
 
     if request.method == 'POST':
-        if ('new password' not in request.form or not request.form['new password']):
-            newdict['new password'] = None
+        if ('contact_type_id' not in request.form or not request.form['contact_type_id']):
+            newdict['contact_type_id'] = None
         else:
-            newdict['new password'] = request.form['new password']
-            print("We have a value: ",newdict['new password'])
+            newdict['contact_type_id'] = request.form['contact_type_id']
+            print("We have a value: ",newdict['contact_type_id'])
+
+        if ('contact_type_value' not in request.form or not request.form['contact_type_value']):
+            newdict['contact_type_value'] = None
+        else:
+            newdict['contact_type_value'] = request.form['contact_type_value']
+            print("We have a value: ",newdict['contact_type_value'])
 
         changes = database.change_password(user_details['username'],newdict['new password'])
 
@@ -1085,10 +1086,13 @@ def add_details():
             return redirect(url_for('login'))
 
 
-    page['title'] = 'Change Details'
+    page['title'] = 'Add details'
 
+    # Get user contact details
+    profile = None
+    profile = database.profile_page(user_details['username'])
 
-    # Get a list of all artists from the database
+    # Get contact details from the database
     contacttypes = None
     contacttypes = database.get_contacttypes()
 
@@ -1102,24 +1106,36 @@ def add_details():
     print(request.form)
 
     if request.method == 'POST':
-        if ('new password' not in request.form or not request.form['new password']):
-            newdict['new password'] = None
+        if ('contact_type_id' not in request.form or not request.form['contact_type_id']):
+            newdict['contact_type_id'] = None
+            page['bar'] = False
+            flash("Details could not be added, please try again")
+            return redirect(url_for('add_details'))
         else:
-            newdict['new password'] = request.form['new password']
-            print("We have a value: ",newdict['new password'])
+            newdict['contact_type_id'] = request.form['contact_type_id']
+            print("We have a value: ",newdict['contact_type_id'])
 
-        changes = database.change_password(user_details['username'],newdict['new password'])
+        if ('contact_type_value' not in request.form or not request.form['contact_type_value']):
+            newdict['contact_type_value'] = None
+            page['bar'] = False
+            flash("Details could not be added (missing values), please try again")
+            return redirect(url_for('add_details'))
+        else:
+            newdict['contact_type_value'] = request.form['contact_type_value']
+            print("We have a value: ",newdict['contact_type_value'])
+
+        changes = database.add_details(user_details['username'],newdict['contact_type_id'],newdict['contact_type_value'])
 
         # If it's null, show error message
-        if changes is None:
+        if (changes is None or changes == 0):
             changes = []
             page['bar'] = False
-            flash("Password could not be changed, please try again")
-            return redirect(url_for('change_password'))
+            flash("Details could not be added (details already exist), please try again")
+            return redirect(url_for('add_details'))
 
         # If there was no error, return to profile page
         page['bar'] = True
-        flash('Password has been successfully updated')
+        flash('Details has been successfully added')
 
         return redirect(url_for('profile_page'))
 
