@@ -1023,60 +1023,6 @@ def change_password():
 
 #####################################################
 #   New Functionality
-#   Change contact details
-#####################################################
-# new function for profile page
-@app.route('/changedetails', methods=['POST','GET'])
-def change_details():
-    if('logged_in' not in session or not session['logged_in']):
-            return redirect(url_for('login'))
-
-
-    page['title'] = 'Change Details'
-
-    changes = None
-    print("request form is:")
-    newdict = {}
-    print(request.form)
-
-    if request.method == 'POST':
-        if ('contact_type_id' not in request.form or not request.form['contact_type_id']):
-            newdict['contact_type_id'] = None
-        else:
-            newdict['contact_type_id'] = request.form['contact_type_id']
-            print("We have a value: ",newdict['contact_type_id'])
-
-        if ('contact_type_value' not in request.form or not request.form['contact_type_value']):
-            newdict['contact_type_value'] = None
-        else:
-            newdict['contact_type_value'] = request.form['contact_type_value']
-            print("We have a value: ",newdict['contact_type_value'])
-
-        changes = database.change_password(user_details['username'],newdict['new password'])
-
-        # If it's null, show error message
-        if changes is None:
-            changes = []
-            page['bar'] = False
-            flash("Password could not be changed, please try again")
-            return redirect(url_for('change_password'))
-
-        # If there was no error, return to profile page
-        page['bar'] = True
-        flash('Password has been successfully updated')
-
-        return redirect(url_for('profile_page'))
-
-    else:
-        return render_template('profile/changedetails.html',
-                                session=session,
-                               page=page,
-                               user=user_details,
-                               profile=profile)
-
-
-#####################################################
-#   New Functionality
 #   Add contact details
 #####################################################
 # new function for profile page
@@ -1087,10 +1033,6 @@ def add_details():
 
 
     page['title'] = 'Add details'
-
-    # Get user contact details
-    profile = None
-    profile = database.profile_page(user_details['username'])
 
     # Get contact details from the database
     contacttypes = None
@@ -1145,3 +1087,79 @@ def add_details():
                                page=page,
                                user=user_details,
                                contacttypes=contacttypes)
+
+
+#####################################################
+#   New Functionality
+#   Change contact details
+#####################################################
+# new function for profile page
+@app.route('/changedetails', methods=['POST','GET'])
+def change_details():
+    if('logged_in' not in session or not session['logged_in']):
+            return redirect(url_for('login'))
+
+    old_contact_type_id = request.args.get('contact_type_id')
+    old_contact_type_value = request.args.get('contact_type_value')
+
+    print("old values:")
+    print(old_contact_type_id)
+    print(old_contact_type_value)
+
+    page['title'] = 'Change Details'
+
+    # Get contact details from the database
+    contacttypes = None
+    contacttypes = database.get_contacttypes()
+
+    # Data integrity checks
+    if contacttypes == None:
+        contacttypes = []
+
+    changes = None
+    print("request form is:")
+    newdict = {}
+    print(request.form)
+
+    if request.method == 'POST':
+        if ('contact_type_id' not in request.form or not request.form['contact_type_id']):
+            newdict['contact_type_id'] = None
+            page['bar'] = False
+            flash("Details could not be changed, please try again")
+            return redirect(url_for('change_details'))
+        else:
+            newdict['contact_type_id'] = request.form['contact_type_id']
+            print("We have a value: ",newdict['contact_type_id'])
+
+        if ('contact_type_value' not in request.form or not request.form['contact_type_value']):
+            newdict['contact_type_value'] = None
+            page['bar'] = False
+            flash("Details could not be changed (missing values), please try again")
+            return redirect(url_for('change_details'))
+        else:
+            newdict['contact_type_value'] = request.form['contact_type_value']
+            print("We have a value: ",newdict['contact_type_value'])
+
+        changes = database.change_details(user_details['username'],old_contact_type_id,old_contact_type_value,newdict['contact_type_id'],newdict['contact_type_value'])
+
+        # If it's null, show error message
+        if (changes is None or changes == 0):
+            changes = []
+            page['bar'] = False
+            flash("Details could not be changed, please try again")
+            return redirect(url_for('change_details'))
+
+        # If there was no error, return to profile page
+        page['bar'] = True
+        flash('Details has been successfully changed')
+
+        return redirect(url_for('profile_page'))
+
+    else:
+        return render_template('profile/changedetails.html',
+                                session=session,
+                               page=page,
+                               user=user_details,
+                               contacttypes=contacttypes,
+                               old_contact_type_id=old_contact_type_id,
+                               old_contact_type_value=old_contact_type_value)

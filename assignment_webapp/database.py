@@ -1643,6 +1643,50 @@ def add_details(username,contact_type_id,contact_type_value):
     return None
 
 
+#####################################################
+#   Change contact detail
+#####################################################
+
+def change_details(username,old_contact_type_id,old_contact_type_value,contact_type_id,contact_type_value):
+    conn = database_connect()
+    if (conn is None):
+        return None
+    cur = conn.cursor()
+    try:
+
+        sql = """
+        UPDATE mediaserver.ContactMethod
+           SET contact_type_id = %s,
+               contact_type_value = %s
+         WHERE username=%s
+               AND contact_type_id = %s
+               AND contact_type_value = %s
+        RETURNING *;
+        """
+
+        print(username)
+        print(old_contact_type_id)
+        print(old_contact_type_value)
+        print(contact_type_id)
+        print(contact_type_value)
+
+
+        cur.execute(sql,(contact_type_id,contact_type_value,username,old_contact_type_id,old_contact_type_value))
+        conn.commit()                   # Commit the transaction
+        r = cur.rowcount
+        print(r, "record(s) affected")
+        cur.close()                     # Close the cursor
+        conn.close()                    # Close the connection to the db
+        print("Change successful")
+        return r
+    except:
+        print("Change failed")
+        raise
+    cur.close()                     # Close the cursor
+    conn.close()                    # Close the connection to the db
+    return None
+
+
 #  FOR MARKING PURPOSES ONLY
 #  DO NOT CHANGE
 

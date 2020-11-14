@@ -5,9 +5,10 @@
         <hr/>
         <a class="pure-button" href="{{url_for('change_password')}}">Change Password</a>
         <a class="pure-button" href="{{url_for('add_details')}}">Add Contact Details</a>
-        <a class="pure-button" href="{{url_for('change_details')}}">Change Contact Details</a>
-
-
+        <div class="info-msg">
+            <i class="fa fa-info-circle"></i>
+            &nbsp;&nbsp;Click on a contact detail to change it.
+        </div>
 
         <div>
             <table class ="styled">
@@ -19,7 +20,10 @@
                 </thead>
                 <tbody>
                     {% for instance in profile %}
-                        <tr>
+                        <tr class="clickable-tr"
+                        data-href="{{ url_for('change_details',
+                        contact_type_id=instance.contact_type_id,
+                        contact_type_value=instance.contact_type_value) }}">
                             <td style="text-align: center"> {{ instance.contact_type_name }}</td>
                             <td> {{ instance.contact_type_value }}</td>
                         </tr>
