@@ -19,8 +19,10 @@
                 </thead>
                 <tbody>
                     {% for instance in profile %}
-                        <td style="text-align: center"> {{ instance.contact_type_name }}</td>
-                        <td> {{ instance.contact_type_value }}</td>
+                        <tr>
+                            <td style="text-align: center"> {{ instance.contact_type_name }}</td>
+                            <td> {{ instance.contact_type_value }}</td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
